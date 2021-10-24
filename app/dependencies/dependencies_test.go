@@ -1,6 +1,7 @@
 package dependencies_test
 
 import (
+	"fmt"
 	"os"
 	"testing"
 
@@ -14,6 +15,7 @@ func TestDependencies(t *testing.T) {
 	setUp()
 
 	cfg, err := config.Load()
+	fmt.Printf("%v", cfg.Server.Port)
 	assert.Nil(t, err, "config should load")
 
 	deps, err := dependencies.NewDependencies(cfg)

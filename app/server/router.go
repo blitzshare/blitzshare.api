@@ -9,6 +9,7 @@ import (
 func NewRouter(deps *dependencies.Dependencies) *gin.Engine {
 	router := gin.New()
 	router.GET("/test", endpoints.HealthHandler())
+	router.GET("/file-share", endpoints.FileShareHandler(deps))
 
 	return router
 }

@@ -17,7 +17,6 @@ func main() {
 	if err != nil {
 		log.Fatalf("failed to load config %v\n", err)
 	}
-
 	deps, err := dependencies.NewDependencies(cfg)
 	if err != nil {
 		log.Fatalf("failed to load dependencies %v\n", err)
@@ -31,6 +30,7 @@ func main() {
 	wg := &sync.WaitGroup{}
 
 	httpServer := server.Start(router, deps, wg)
+	log.Printf("server running on port %d", cfg.Server.Port)
 	<-signals
 
 	err = httpServer.Stop()
