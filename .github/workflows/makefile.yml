@@ -1,0 +1,24 @@
+name: Makefile CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+
+    runs-on: alpine:3.12
+
+    steps:
+    - uses: actions/checkout@v2
+      
+    - name: Install dependencies
+      run: make install
+      
+    - name: Run test
+      run: make test
+      
+    - name: Run build
+      run: make build
