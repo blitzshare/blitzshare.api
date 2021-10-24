@@ -11,4 +11,7 @@ fix-format:
 	goimports -w app/ pkg/ cmd/ mocks/ testhelpers
 
 start:
-	go run cmd/web/main.go
+	go run cmd/main.go
+
+build:
+	GIN_MODE=release go build cmd/main.go
