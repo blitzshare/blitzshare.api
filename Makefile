@@ -13,4 +13,4 @@ start:
 	go run cmd/main.go
 
 build:
-	GIN_MODE=release go build cmd/main.go
+	GIN_MODE=release go build -o entrypoint cmd/main.go

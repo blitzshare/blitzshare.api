@@ -1,4 +1,4 @@
-module github.com/blitzshare/blitzshare.fileshare.api
+module blitzshare.fileshare.api
 
 go 1.17
 
