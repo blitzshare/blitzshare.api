@@ -17,3 +17,6 @@ vendor/
 # environment configs
 .env.local
 .env.sample
+
+# ignore artifact
+main
