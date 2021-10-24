@@ -4,7 +4,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/blitzshare/blitzshare.fileshare.api/app/server/endpoints"
+	"blitzshare.fileshare.api/app/server/endpoints"
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 )

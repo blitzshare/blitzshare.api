@@ -1,0 +1,6 @@
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: file-share-ns
+  labels:
+    name: file-share

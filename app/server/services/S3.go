@@ -5,10 +5,10 @@ import (
 	"log"
 	"time"
 
+	dep "blitzshare.fileshare.api/app/dependencies"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
-	dep "github.com/blitzshare/blitzshare.fileshare.api/app/dependencies"
 	"github.com/google/uuid"
 )
 

@@ -1,8 +1,8 @@
 package server
 
 import (
-	"github.com/blitzshare/blitzshare.fileshare.api/app/dependencies"
-	"github.com/blitzshare/blitzshare.fileshare.api/app/server/endpoints"
+	"blitzshare.fileshare.api/app/dependencies"
+	"blitzshare.fileshare.api/app/server/endpoints"
 	"github.com/gin-gonic/gin"
 )
 
