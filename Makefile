@@ -11,4 +11,4 @@ fix-format:
 	goimports -w app/ pkg/ cmd/ mocks/ testhelpers
 
 start:
-	go run cmd/web/main.go
+	go run cmd/main.go
