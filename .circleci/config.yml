@@ -3,6 +3,20 @@ orbs:
   kubernetes: circleci/kubernetes@0.12.0
   aws-cli: circleci/aws-cli@2.0.3
 
+gen_k8s_remplates: &gen_k8s_remplates
+  - run:
+      name: generate k8s templates
+      command: |
+        sudo apt install gettext-base
+        export DOCKER_IMAGE_URL=iamkimchi/blitzshare.fileshare.api:${CIRCLE_BUILD_NUM}
+        export PORT=80
+        export ENV=prod
+        export S3_BUCKET_NAME=blitzshare-fileshare-store
+        export S3_BUCKET_UPLOAD_KEY=share
+        export S3_BUCKET_REGION=eu-west-1
+        envsubst  < ./k8s/config/deployment.tml.yaml > ./k8s/config/deployment.yaml
+        cat ./k8s/config/deployment.yaml
+
 jobs:
   test_job:
     working_directory: ~/repo
@@ -29,57 +43,49 @@ jobs:
       - store_test_results:
           path: /tmp/test-reports
 
+  build_job:
+    working_directory: ~/repo
+    docker:
+      - image: circleci/golang:1.17.2
+    environment:
+      LOCAL_DOCKER_IMAGE: sharefile-api
+    steps:
+      - checkout
+      - kubernetes/install-kubectl
+      - setup_remote_docker:
+          version: 19.03.13
+          docker_layer_caching: false
+      - run:
+          name: docker build, tag & push
+          command: |
+            docker login -u ${DOCKERHUB_USER} -p ${DOCKERHUB_PASSWORD}
+            docker build -t ${LOCAL_DOCKER_IMAGE}:${CIRCLE_BUILD_NUM} .
+            docker tag ${LOCAL_DOCKER_IMAGE}:${CIRCLE_BUILD_NUM} iamkimchi/blitzshare.fileshare.api:ci-build-${CIRCLE_BUILD_NUM}
+            docker push iamkimchi/blitzshare.fileshare.api:ci-build-${CIRCLE_BUILD_NUM}
+            docker tag ${LOCAL_DOCKER_IMAGE}:${CIRCLE_BUILD_NUM} iamkimchi/blitzshare.fileshare.api:latest
+            docker push iamkimchi/blitzshare.fileshare.api:latest
+      - <<: *gen_k8s_remplates
+      - run:
+          name: kubectl diff
+          command: |
+            pushd k8s
+            bash diff.sh
+            popd
   deploy_job:
     working_directory: ~/repo
     docker:
       - image: circleci/golang:1.17.2
     environment:
       ECR_REPO_NAME: blitzshare-fileshare-api-ecr
-      LOCAL_DOCKER_IMAGE: sharefile-api
     steps:
       - checkout
-      - kubernetes/install-kubectl
-      - aws-cli/setup
-      - setup_remote_docker:
-          version: 19.03.13
-          docker_layer_caching: false
-      - run:
-          name: Copnfigure cluster context
-          command: aws eks --region eu-west-1 update-kubeconfig --name blitzshare-cluster 
-      - run:
-          name: Login to ECR
-          command: |
-            aws ecr get-login-password | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.eu-west-1.amazonaws.com/${ECR_REPO_NAME}
-      - run:
-          name: docker build, tag & push
-          command: |
-            ECR_IMAGE=${AWS_ACCOUNT_ID}.dkr.ecr.eu-west-1.amazonaws.com/${ECR_REPO_NAME}
-            docker build -t ${LOCAL_DOCKER_IMAGE}:${CIRCLE_BUILD_NUM} .
-            docker tag ${LOCAL_DOCKER_IMAGE}:${CIRCLE_BUILD_NUM} ${ECR_IMAGE}:${CIRCLE_BUILD_NUM}
-            docker push ${ECR_IMAGE}:${CIRCLE_BUILD_NUM}
-            # upload validate
-            aws ecr list-images --repository-name ${ECR_REPO_NAME}
-      - run:
-          name: k8s templates
-          command: |
-            sudo apt install gettext-base
-            export ECR_IMAGE_URL=${AWS_ACCOUNT_ID}.dkr.ecr.eu-west-1.amazonaws.com/${ECR_REPO_NAME}:latest
-            export PORT=80
-            export ENV=prod
-            export S3_BUCKET_NAME=blitzshare-fileshare-store
-            export S3_BUCKET_UPLOAD_KEY=share
-            export S3_BUCKET_REGION=eu-west-1
-
-            envsubst  < ./k8s/config/deployment.tml.yaml > ./k8s/config/deployment.yaml
-            cat ./k8s/config/deployment.yaml
+      - <<: *gen_k8s_remplates
       - run:
           name: k8s deploy
           command: |
             pushd k8s
             bash apply.sh
             popd
-
-
 
 workflows:
   test-deploy-wf:
@@ -90,7 +96,15 @@ workflows:
             branches:
               only:
                 - master
-                - chore/ci-cd-integration
+                - chore/ci-dockerhub-integration
+      - build_job:
+          context: eu-west-1
+          requires:
+            - test_job
+          filters:
+            branches:
+              only:
+                - chore/ci-dockerhub-integration
       - deploy_job:
           context: eu-west-1
           requires:
@@ -99,4 +113,3 @@ workflows:
             branches:
               only:
                 - master
-                - chore/ci-cd-integration
