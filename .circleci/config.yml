@@ -48,43 +48,29 @@ jobs:
     docker:
       - image: circleci/golang:1.17.2
     environment:
-      # ECR_REPO_NAME: blitzshare-fileshare-api-ecr
       LOCAL_DOCKER_IMAGE: sharefile-api
     steps:
       - checkout
       - kubernetes/install-kubectl
-      - aws-cli/setup
       - setup_remote_docker:
           version: 19.03.13
           docker_layer_caching: false
-      # - run:
-      #     name: Copnfigure cluster context
-      #     command: aws eks --region eu-west-1 update-kubeconfig --name blitzshare-cluster
-      # - run:
-      #     name: Login to ECR
-      #     command: |
-      #       aws ecr get-login-password | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.eu-west-1.amazonaws.com/${ECR_REPO_NAME}
-      # - run:
-      #     name: docker build, tag & push
-      #     command: |
-      #       ECR_IMAGE=${AWS_ACCOUNT_ID}.dkr.ecr.eu-west-1.amazonaws.com/${ECR_REPO_NAME}
-      #       docker build -t ${LOCAL_DOCKER_IMAGE}:${CIRCLE_BUILD_NUM} .
-      #       docker tag ${LOCAL_DOCKER_IMAGE}:${CIRCLE_BUILD_NUM} ${ECR_IMAGE}:${CIRCLE_BUILD_NUM}
-      #       docker push ${ECR_IMAGE}:${CIRCLE_BUILD_NUM}
-      #       # upload validate
-      #       aws ecr list-images --repository-name ${ECR_REPO_NAME}
       - run:
           name: docker build, tag & push
           command: |
             docker login -u ${DOCKERHUB_USER} -p ${DOCKERHUB_PASSWORD}
             docker build -t ${LOCAL_DOCKER_IMAGE}:${CIRCLE_BUILD_NUM} .
-            docker tag ${LOCAL_DOCKER_IMAGE}:${CIRCLE_BUILD_NUM} iamkimchi/blitzshare.fileshare.api:${CIRCLE_BUILD_NUM}
-            docker push iamkimchi/blitzshare.fileshare.api:${CIRCLE_BUILD_NUM}
+            docker tag ${LOCAL_DOCKER_IMAGE}:${CIRCLE_BUILD_NUM} iamkimchi/blitzshare.fileshare.api:ci-build-${CIRCLE_BUILD_NUM}
+            docker push iamkimchi/blitzshare.fileshare.api:ci-build-${CIRCLE_BUILD_NUM}
+            docker tag ${LOCAL_DOCKER_IMAGE}:${CIRCLE_BUILD_NUM} iamkimchi/blitzshare.fileshare.api:latest
+            docker push iamkimchi/blitzshare.fileshare.api:latest
       - <<: *gen_k8s_remplates
       - run:
           name: kubectl diff
-          command: bash ./diff.sh
-
+          command: |
+            pushd k8s
+            bash diff.sh
+            popd
   deploy_job:
     working_directory: ~/repo
     docker:
