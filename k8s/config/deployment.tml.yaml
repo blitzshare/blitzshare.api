@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: file-share
-          image: ${ECR_IMAGE_URL}
+          image: ${DOCKER_IMAGE_URL}
           env:
             - name: ENV
               value: "${ENV}"
