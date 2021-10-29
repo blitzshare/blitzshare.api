@@ -66,6 +66,9 @@ jobs:
             docker push iamkimchi/blitzshare.fileshare.api:latest
       - <<: *gen_k8s_remplates
       - run:
+          name: Copnfigure cluster context
+          command: aws eks --region eu-west-1 update-kubeconfig --name blitzshare-cluster 
+      - run:
           name: kubectl diff
           command: |
             pushd k8s
@@ -80,6 +83,9 @@ jobs:
     steps:
       - checkout
       - <<: *gen_k8s_remplates
+      - run:
+          name: Copnfigure cluster context
+          command: aws eks --region eu-west-1 update-kubeconfig --name blitzshare-cluster 
       - run:
           name: k8s deploy
           command: |
