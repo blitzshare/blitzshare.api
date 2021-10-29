@@ -94,9 +94,9 @@ workflows:
           context: eu-west-1
           filters:
             branches:
-              only:
-                - master
-                - chore/ci-dockerhub-integration
+              ignore:
+                - main
+
       - build_job:
           context: eu-west-1
           requires:
@@ -104,7 +104,7 @@ workflows:
           filters:
             branches:
               only:
-                - chore/ci-dockerhub-integration
+                - main
       - deploy_job:
           context: eu-west-1
           requires:
@@ -112,4 +112,4 @@ workflows:
           filters:
             branches:
               only:
-                - master
+                - main
