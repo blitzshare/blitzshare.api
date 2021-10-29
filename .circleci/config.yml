@@ -69,12 +69,12 @@ jobs:
       - run:
           name: Copnfigure cluster context
           command: aws eks --region eu-west-1 update-kubeconfig --name blitzshare-cluster 
-      - run:
-          name: kubectl diff
-          command: |
-            pushd k8s
-            bash diff.sh
-            popd
+      # - run:
+      #     name: kubectl diff
+      #     command: |
+      #       pushd k8s
+      #       bash diff.sh
+      #       popd
   deploy_job:
     working_directory: ~/repo
     docker:
