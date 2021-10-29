@@ -101,15 +101,7 @@ workflows:
           context: eu-west-1
           requires:
             - test_job
-          filters:
-            branches:
-              only:
-                - main
       - deploy_job:
           context: eu-west-1
           requires:
             - test_job
-          filters:
-            branches:
-              only:
-                - main
