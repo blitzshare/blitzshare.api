@@ -92,6 +92,10 @@ workflows:
     jobs:
       - test_job:
           context: eu-west-1
+          filters:
+            branches:
+              ignore:
+                - main
 
       - build_job:
           context: eu-west-1
@@ -104,7 +108,7 @@ workflows:
       - deploy_job:
           context: eu-west-1
           requires:
-            - test_job
+            - build_job
           filters:
             branches:
               only:
