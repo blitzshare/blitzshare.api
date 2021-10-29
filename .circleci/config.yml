@@ -52,6 +52,7 @@ jobs:
     steps:
       - checkout
       - kubernetes/install-kubectl
+      - aws-cli/setup
       - setup_remote_docker:
           version: 19.03.13
           docker_layer_caching: false
@@ -78,10 +79,10 @@ jobs:
     working_directory: ~/repo
     docker:
       - image: circleci/golang:1.17.2
-    environment:
-      ECR_REPO_NAME: blitzshare-fileshare-api-ecr
     steps:
       - checkout
+      - kubernetes/install-kubectl
+      - aws-cli/setup
       - <<: *gen_k8s_remplates
       - run:
           name: Copnfigure cluster context
