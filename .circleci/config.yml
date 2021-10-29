@@ -3,12 +3,12 @@ orbs:
   kubernetes: circleci/kubernetes@0.12.0
   aws-cli: circleci/aws-cli@2.0.3
 
-gen_k8s_remplates: &gen_k8s_remplates
+gen_k8s_remplates: &gen_k8s_templates
   - run:
       name: generate k8s templates
       command: |
         sudo apt install gettext-base
-        export DOCKER_IMAGE_URL=iamkimchi/blitzshare.fileshare.api:${CIRCLE_BUILD_NUM}
+        export DOCKER_IMAGE_URL=iamkimchi/blitzshare.fileshare.api:ci-build-${CIRCLE_BUILD_NUM}
         export PORT=80
         export ENV=prod
         export S3_BUCKET_NAME=blitzshare-fileshare-store
@@ -65,16 +65,11 @@ jobs:
             docker push iamkimchi/blitzshare.fileshare.api:ci-build-${CIRCLE_BUILD_NUM}
             docker tag ${LOCAL_DOCKER_IMAGE}:${CIRCLE_BUILD_NUM} iamkimchi/blitzshare.fileshare.api:latest
             docker push iamkimchi/blitzshare.fileshare.api:latest
-      - <<: *gen_k8s_remplates
+      - <<: *gen_k8s_templates
       - run:
           name: Copnfigure cluster context
           command: aws eks --region eu-west-1 update-kubeconfig --name blitzshare-cluster 
-      # - run:
-      #     name: kubectl diff
-      #     command: |
-      #       pushd k8s
-      #       bash diff.sh
-      #       popd
+
   deploy_job:
     working_directory: ~/repo
     docker:
@@ -83,7 +78,7 @@ jobs:
       - checkout
       - kubernetes/install-kubectl
       - aws-cli/setup
-      - <<: *gen_k8s_remplates
+      - <<: *gen_k8s_templates
       - run:
           name: Copnfigure cluster context
           command: aws eks --region eu-west-1 update-kubeconfig --name blitzshare-cluster 
