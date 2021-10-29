@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: file-share
-          image: 587813402793.dkr.ecr.eu-west-1.amazonaws.com/blitzshare-fileshare-api-ecr:latest
+          image: iamkimchi/blitzshare.fileshare.api:local-latest
           env:
             - name: ENV
               value: prod

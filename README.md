@@ -33,3 +33,7 @@ kubemqctl queues list
 
 minikube tunnel
 
+## init kubemq
+
+https://account.kubemq.io/home/get-kubemq/kubernetes
+

@@ -85,9 +85,7 @@ jobs:
       - run:
           name: k8s deploy
           command: |
-            pushd k8s
-            bash apply.sh
-            popd
+            make k8s-apply
 
 workflows:
   test-deploy-wf:
