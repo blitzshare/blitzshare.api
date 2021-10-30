@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"time"
 
 	"github.com/google/uuid"
 	kubemq "github.com/kubemq-io/kubemq-go"
@@ -11,28 +12,26 @@ import (
 )
 
 type GenerateUploadLinkEvent struct {
-	Id string `json:"id"`
+	ShareId string `json:"shareId"`
 }
 
 func NewGenerateUploadLinkEvent() *GenerateUploadLinkEvent {
-	return &GenerateUploadLinkEvent{Id: uuid.NewString()}
+	return &GenerateUploadLinkEvent{ShareId: uuid.NewString()}
 }
 
 const clientId = "fileshare-api"
 const uploadMsgEventChannelName = "uploadMsgEventChaannel"
 
-func SubmitUploadMsgEvent(queueUrl string) *GenerateUploadLinkEvent {
-	log.Info("SubmitEvent")
+func SubmitUploadMsgEvent(queueUrl string) string {
+	log.Info("SubmitEvent:Queue")
 	event := NewGenerateUploadLinkEvent()
 	ctx, _ := context.WithCancel(context.Background())
 	log.Info("deps.Config.Settings.QueueUrl", queueUrl)
 	bEvent, err := json.Marshal(event)
 	if err != nil {
 		fmt.Printf("Error: %s", err)
-		return nil
+		return ""
 	}
-	log.Info("bEvent", bEvent)
-	log.Info("str:bEvent", string(bEvent))
 	client, err := kubemq.NewClient(ctx,
 		kubemq.WithAddress(queueUrl, 50000),
 		kubemq.WithClientId(clientId),
@@ -42,55 +41,49 @@ func SubmitUploadMsgEvent(queueUrl string) *GenerateUploadLinkEvent {
 		log.Fatal("something is wrong", err)
 	}
 	defer client.Close()
-	channelName := uploadMsgEventChannelName
-	meta := "some-metadata"
 
-	err = client.E().
-		SetId(event.Id).
-		SetChannel(channelName).
-		SetMetadata(meta).
+	sendResult, err := client.NewQueueMessage().
+		SetChannel(uploadMsgEventChannelName).
 		SetBody(bEvent).
 		Send(ctx)
+
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Info("message sent", event.Id)
-	log.Info("clientId", clientId)
-	log.Info("uploadMsgEventChannelName", uploadMsgEventChannelName)
-	return event
+	log.Infoln("clientId", clientId)
+	log.Infoln("uploadMsgEventChannelName", uploadMsgEventChannelName)
+	return sendResult.MessageID
 }
 
-func SubscribeToTopic(queueUrl string) {
-	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
-	client, err := kubemq.NewClient(ctx,
-		kubemq.WithAddress(queueUrl, 50000),
-		kubemq.WithClientId(clientId),
-		kubemq.WithTransportType(kubemq.TransportTypeGRPC))
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer client.Close()
-
-	errCh := make(chan error)
-	eventsCh, err := client.SubscribeToEvents(ctx, uploadMsgEventChannelName, "", errCh)
-	if err != nil {
-		log.Fatal(err)
-		return
-	}
-	for {
-		select {
-		case err := <-errCh:
+func SubscribeToQueue(queueUrl string) {
+	fmt.Println("Infinite Loop 2")
+	log.Info("SubmitEvent:SubscribeToQueue")
+	for true {
+		ctx, cancel := context.WithCancel(context.Background())
+		defer cancel()
+		client, err := kubemq.NewClient(ctx,
+			kubemq.WithAddress(queueUrl, 50000),
+			kubemq.WithClientId(clientId),
+			kubemq.WithTransportType(kubemq.TransportTypeGRPC))
+		if err != nil {
 			log.Fatal(err)
-			return
-		case event, more := <-eventsCh:
-			if !more {
-				fmt.Println("Event Received, done")
-				return
-			}
-			log.Printf("Event Received:\nEventID: %s\nChannel: %s\nMetadata: %s\nBody: %s\n", event.Id, event.Channel, event.Metadata, event.Body)
-		case <-ctx.Done():
-			return
 		}
+		defer client.Close()
+
+		receiveResult, err := client.NewReceiveQueueMessagesRequest().
+			SetChannel(uploadMsgEventChannelName).
+			SetMaxNumberOfMessages(1).
+			SetWaitTimeSeconds(5).
+			Send(ctx)
+		if err != nil {
+			log.Fatal(err)
+		}
+		if receiveResult.Messages != nil {
+			log.Printf("Received %d Messages:\n", receiveResult.MessagesReceived)
+			for _, msg := range receiveResult.Messages {
+				log.Printf("MessageID: %s, Body: %s", msg.MessageID, string(msg.Body))
+			}
+		}
+		time.Sleep(time.Second * 10)
 	}
 }

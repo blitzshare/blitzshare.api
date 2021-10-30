@@ -29,12 +29,12 @@ dockerhub-build:
 	docker build -t fileshare-api .
 	docker tag fileshare-api:latest iamkimchi/blitzshare.fileshare.api:local-latest
 	docker push iamkimchi/blitzshare.fileshare.api:local-latest
-	make k8s-apply
+	make minikube-apply
 	# minikube image load fileshare-api:latest
 	
 
-k8s-apply:
-	# kubectl delete namespace file-share-ns
+minikube-apply:
+	kubectl delete namespace file-share-ns
 	kubectl apply -f k8s/config/namespace.yaml 
 	kubectl apply -f k8s/config/deployment.yaml
 	kubectl apply -f k8s/config/service.yaml
