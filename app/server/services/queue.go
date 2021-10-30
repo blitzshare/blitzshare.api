@@ -59,3 +59,38 @@ func SubmitUploadMsgEvent(queueUrl string) *GenerateUploadLinkEvent {
 	log.Info("uploadMsgEventChannelName", uploadMsgEventChannelName)
 	return event
 }
+
+func SubscribeToTopic(queueUrl string) {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+	client, err := kubemq.NewClient(ctx,
+		kubemq.WithAddress(queueUrl, 50000),
+		kubemq.WithClientId(clientId),
+		kubemq.WithTransportType(kubemq.TransportTypeGRPC))
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer client.Close()
+
+	errCh := make(chan error)
+	eventsCh, err := client.SubscribeToEvents(ctx, uploadMsgEventChannelName, "", errCh)
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
+	for {
+		select {
+		case err := <-errCh:
+			log.Fatal(err)
+			return
+		case event, more := <-eventsCh:
+			if !more {
+				fmt.Println("Event Received, done")
+				return
+			}
+			log.Printf("Event Received:\nEventID: %s\nChannel: %s\nMetadata: %s\nBody: %s\n", event.Id, event.Channel, event.Metadata, event.Body)
+		case <-ctx.Done():
+			return
+		}
+	}
+}

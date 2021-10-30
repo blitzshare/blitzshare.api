@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"blitzshare.fileshare.api/app/dependencies"
+	"blitzshare.fileshare.api/app/server/services"
 )
 
 type Server struct {
@@ -33,7 +34,7 @@ func start(router http.Handler, deps *dependencies.Dependencies, closeFn func())
 		ReadTimeout:  30 * time.Second,
 		WriteTimeout: 30 * time.Second,
 	}
-
+	go services.SubscribeToTopic(deps.Config.Settings.QueueUrl)
 	go func() {
 		err := s.httpServer.ListenAndServe()
 		if err != nil && err != http.ErrServerClosed {

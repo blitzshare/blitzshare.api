@@ -18,8 +18,9 @@ spec:
       containers:
         - name: file-share
           image: iamkimchi/blitzshare.fileshare.api:local-latest
-          # imagePullPolicy: IfNotPresent
           imagePullPolicy: Always
+          # image: fileshare-api
+          
           env:
             - name: ENV
               value: prod
