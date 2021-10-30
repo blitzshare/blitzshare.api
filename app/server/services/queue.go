@@ -78,7 +78,7 @@ func SubscribeToQueue(queueUrl string) {
 		if err != nil {
 			log.Fatal(err)
 		}
-		if receiveResult.Messages != nil {
+		if receiveResult.MessagesReceived > 0 {
 			log.Printf("Received %d Messages:\n", receiveResult.MessagesReceived)
 			for _, msg := range receiveResult.Messages {
 				log.Printf("MessageID: %s, Body: %s", msg.MessageID, string(msg.Body))

@@ -38,6 +38,7 @@ minikube-apply:
 	kubectl apply -f k8s/config/namespace.yaml 
 	kubectl apply -f k8s/config/deployment.yaml
 	kubectl apply -f k8s/config/service.yaml
+	kubectl wait -f k8s/config/deployment.yaml --for condition=available
 	# kubectl patch deployment file-share-deployment -p "{\"spec\": {\"template\": {\"metadata\": { \"labels\": {  \"redeploy\": \"$(date +%s)\"}}}}}"
 
 k8s-destory:
