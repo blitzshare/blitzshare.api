@@ -6,28 +6,33 @@ import (
 	"fmt"
 
 	"github.com/google/uuid"
-	"github.com/kubemq-io/kubemq-go"
+	kubemq "github.com/kubemq-io/kubemq-go"
 	log "github.com/sirupsen/logrus"
 )
 
 type GenerateUploadLinkEvent struct {
-	id string
+	Id string `json:"id"`
 }
 
 func NewGenerateUploadLinkEvent() *GenerateUploadLinkEvent {
-	return &GenerateUploadLinkEvent{id: uuid.NewString()}
+	return &GenerateUploadLinkEvent{Id: uuid.NewString()}
 }
 
 const clientId = "fileshare-api"
-const uploadMsgEventChannelName = "uploadMsgEvent"
+const uploadMsgEventChannelName = "uploadMsgEventChaannel"
 
 func SubmitUploadMsgEvent(queueUrl string) *GenerateUploadLinkEvent {
 	log.Info("SubmitEvent")
 	event := NewGenerateUploadLinkEvent()
 	ctx, _ := context.WithCancel(context.Background())
-
 	log.Info("deps.Config.Settings.QueueUrl", queueUrl)
-
+	bEvent, err := json.Marshal(event)
+	if err != nil {
+		fmt.Printf("Error: %s", err)
+		return nil
+	}
+	log.Info("bEvent", bEvent)
+	log.Info("str:bEvent", string(bEvent))
 	client, err := kubemq.NewClient(ctx,
 		kubemq.WithAddress(queueUrl, 50000),
 		kubemq.WithClientId(clientId),
@@ -39,14 +44,9 @@ func SubmitUploadMsgEvent(queueUrl string) *GenerateUploadLinkEvent {
 	defer client.Close()
 	channelName := uploadMsgEventChannelName
 	meta := "some-metadata"
-	bEvent, err := json.Marshal(event)
-	if err != nil {
-		fmt.Printf("Error: %s", err)
-		return nil
-	}
 
 	err = client.E().
-		SetId(event.id).
+		SetId(event.Id).
 		SetChannel(channelName).
 		SetMetadata(meta).
 		SetBody(bEvent).
@@ -54,7 +54,7 @@ func SubmitUploadMsgEvent(queueUrl string) *GenerateUploadLinkEvent {
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Info("message sent", event.id)
+	log.Info("message sent", event.Id)
 	log.Info("clientId", clientId)
 	log.Info("uploadMsgEventChannelName", uploadMsgEventChannelName)
 	return event
