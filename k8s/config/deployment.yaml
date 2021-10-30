@@ -18,6 +18,8 @@ spec:
       containers:
         - name: file-share
           image: iamkimchi/blitzshare.fileshare.api:local-latest
+          # imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           env:
             - name: ENV
               value: prod
@@ -29,8 +31,10 @@ spec:
               value: "share" 
             - name: S3_BUCKET_REGION
               value: "*********" 
+            - name: QUEUE_URL
+              value: kubemq-cluster-grpc.kubemq.svc.cluster.local
           ports:
-            - containerPort: 8000
+            - containerPort: 80
           resources:
             limits:
               memory: 256Mi

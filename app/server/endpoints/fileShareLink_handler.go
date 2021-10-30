@@ -10,6 +10,7 @@ import (
 
 func FileShareHandler(deps *dep.Dependencies) func(c *gin.Context) {
 	return func(c *gin.Context) {
+		services.SubmitUploadMsgEvent(deps.Config.Settings.QueueUrl)
 		presignedUrl := services.GetPresignedUrl(deps)
 
 		c.JSON(http.StatusOK, gin.H{

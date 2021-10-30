@@ -1,16 +1,12 @@
-FROM golang:1.17.2-alpine
-
-WORKDIR /app
-
-COPY . .
-
+FROM golang:1.17.2-alpine AS builder
+WORKDIR /go/src
+ADD . /go/src
 RUN go install golang.org/x/tools/cmd/goimports@latest
 RUN go mod vendor
-RUN go build -o entrypoint cmd/main.go # GIN_MODE=release 
+RUN go build -o /app/entrypoint cmd/main.go # GIN_MODE=release 
 
-EXPOSE 8000
-
-CMD ls
-
-# ENTRYPOINT [ "main"]
+FROM alpine
+WORKDIR /app
+COPY --from=builder /app/entrypoint /app/
+EXPOSE 80
 ENTRYPOINT [ "/app/entrypoint"]

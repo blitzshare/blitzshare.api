@@ -26,7 +26,7 @@ func TestDependencies(t *testing.T) {
 }
 
 func setUp() {
-	_ = os.Setenv("PORT", "8000")
+	_ = os.Setenv("PORT", "80")
 	_ = os.Setenv("ENV", "local")
 }
 
