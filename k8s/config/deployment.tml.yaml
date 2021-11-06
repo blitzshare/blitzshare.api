@@ -29,6 +29,8 @@ spec:
               value: "${S3_BUCKET_UPLOAD_KEY}" 
             - name: S3_BUCKET_REGION
               value: "${S3_BUCKET_REGION}" 
+            - name: QUEUE_URL
+              value: kubemq-cluster-grpc.kubemq.svc.cluster.local
           ports:
             - containerPort: 80
           resources:
