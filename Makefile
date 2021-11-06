@@ -24,7 +24,11 @@ minikube-build:
 	make k8s-apply
 	# minikube image load fileshare-api:latest
 	
-
+k8s-apply:
+	kubectl apply -f k8s/config/namespace.yaml 
+	kubectl apply -f k8s/config/deployment.yaml
+	kubectl apply -f k8s/config/service.yaml
+	kubectl wait -f k8s/config/deployment.yaml --for condition=available
 dockerhub-build:
 	docker build -t fileshare-api .
 	docker tag fileshare-api:latest iamkimchi/blitzshare.fileshare.api:local-latest
@@ -34,7 +38,7 @@ dockerhub-build:
 	
 
 minikube-apply:
-	kubectl delete namespace file-share-ns
+	# kubectl delete namespace file-share-ns
 	kubectl apply -f k8s/config/namespace.yaml 
 	kubectl apply -f k8s/config/deployment.yaml
 	kubectl apply -f k8s/config/service.yaml
@@ -50,3 +54,5 @@ docker-cleanup:
 	docker rm -vf $(docker ps -a -q)
 	docker rmi -f $(docker images -a -q)
 
+eks-context:
+	aws eks --region eu-west-1 update-kubeconfig --name blitzshare-cluster

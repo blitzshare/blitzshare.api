@@ -85,6 +85,7 @@ jobs:
       - run:
           name: k8s deploy
           command: |
+            # ./kubectl set image -n ${NS} ${DEPLOYMENT} default=${ECR_URL}:${CIRCLE_BUILD_NUM} --record
             make k8s-apply
 
 workflows:

@@ -19,8 +19,6 @@ spec:
         - name: file-share
           image: iamkimchi/blitzshare.fileshare.api:local-latest
           imagePullPolicy: Always
-          # image: fileshare-api
-          
           env:
             - name: ENV
               value: prod
