@@ -3,14 +3,21 @@ kind: Service
 metadata:
   labels:
     domain: blitzshare
-  name: file-share-service
+  name: file-share-svc
   namespace: file-share-ns
   
 spec:
+  type: LoadBalancer
   selector:
-    app: file-share-service
+    app: file-share
+  ipFamilyPolicy: PreferDualStack
+  
+  ipFamilies:
+    - IPv4  
+    # - IPv6
   ports:
     - protocol: TCP
       port: 80
-      targetPort: 80
-  type: LoadBalancer
+      targetPort: 8000
+      name: http
+

@@ -29,11 +29,12 @@ k8s-apply:
 	kubectl apply -f k8s/config/deployment.yaml
 	kubectl apply -f k8s/config/service.yaml
 	kubectl wait -f k8s/config/deployment.yaml --for condition=available
+
 dockerhub-build:
 	docker build -t fileshare-api .
 	docker tag fileshare-api:latest iamkimchi/blitzshare.fileshare.api:local-latest
 	docker push iamkimchi/blitzshare.fileshare.api:local-latest
-	make minikube-apply
+	# make minikube-apply
 	# minikube image load fileshare-api:latest
 	
 

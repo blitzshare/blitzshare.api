@@ -23,7 +23,7 @@ spec:
             - name: ENV
               value: prod
             - name: PORT
-              value: "80"
+              value: "8000"
             - name: S3_BUCKET_NAME
               value: blitzshare-fileshare-store
             - name: S3_BUCKET_UPLOAD_KEY

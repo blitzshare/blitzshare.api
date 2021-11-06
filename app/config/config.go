@@ -8,7 +8,7 @@ type Config struct {
 }
 
 type Server struct {
-	Port int `envconfig:"PORT"`
+	Port int `envconfig:"PORT" default:"8000"`
 }
 
 type Settings struct {

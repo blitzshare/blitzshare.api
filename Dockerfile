@@ -8,5 +8,5 @@ RUN go build -o /app/entrypoint cmd/main.go # GIN_MODE=release
 FROM alpine
 WORKDIR /app
 COPY --from=builder /app/entrypoint /app/
-EXPOSE 80
+EXPOSE 8000
 ENTRYPOINT [ "/app/entrypoint"]
