@@ -14,6 +14,7 @@ func NewRouter(deps *dependencies.Dependencies) *gin.Engine {
 
 	router.GET("/test", endpoints.HealthHandler())
 	router.GET("/file-share", endpoints.FileShareHandler(deps))
+	router.GET("/register", endpoints.RegisterHandler(deps))
 
 	return router
 }
