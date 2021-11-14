@@ -20,3 +20,5 @@ vendor/
 
 # ignore artifact
 main
+
+.idea
