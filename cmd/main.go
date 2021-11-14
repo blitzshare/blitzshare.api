@@ -1,18 +1,24 @@
 package main
 
 import (
-	"log"
 	"os"
 	"os/signal"
 	"sync"
 	"syscall"
 
-	"blitzshare.fileshare.api/app/config"
-	"blitzshare.fileshare.api/app/dependencies"
-	"blitzshare.fileshare.api/app/server"
+	"blitzshare.api/app/config"
+	"blitzshare.api/app/dependencies"
+	"blitzshare.api/app/server"
+	log "github.com/sirupsen/logrus"
 )
 
+func initLog() {
+	log.SetFormatter(&log.JSONFormatter{})
+	log.SetOutput(os.Stdout)
+}
+
 func main() {
+	initLog()
 	cfg, err := config.Load()
 	if err != nil {
 		log.Fatalf("failed to load config %v\n", err)

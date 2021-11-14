@@ -1,15 +1,7 @@
----
-kind: Namespace
-apiVersion: v1
-metadata:
-  name: blitzshare-redis-ns
-  labels:
-    name: blitzshare-redis
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  namespace: file-share-ns
+  namespace: blitzshare-api-ns
   name: blitzshare-redis-primary-deployment
   labels:
     name:  blitzshare-redis-primary

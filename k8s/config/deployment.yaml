@@ -1,34 +1,36 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  namespace: file-share-ns
-  name: file-share-deployment
+  namespace: blitzshare-api-ns
+  name: blitzshare-api-deployment
   labels:
-    app: file-share
+    app: blitzshare-api
 spec:
   selector:
     matchLabels:
-      app: file-share
+      app: blitzshare-api
   replicas: 1
   template:
     metadata:
       labels:
-        app: file-share
+        app: blitzshare-api
     spec:
       containers:
-        - name: file-share
-          image: iamkimchi/blitzshare.fileshare.api:local-latest
+        - name: blitzshare-api
+          image: iamkimchi/blitzshare.api:latest
           env:
             - name: ENV
               value: prod
             - name: PORT
-              value: "80"
+              value: "8000"
             - name: S3_BUCKET_NAME
               value: blitzshare-fileshare-store
             - name: S3_BUCKET_UPLOAD_KEY
-              value: "share" 
+              value: "share"
             - name: S3_BUCKET_REGION
-              value: "*********" 
+              value: "*********"
+            - name: REDIS_URL
+              value: redis.svc.cluster.local
           ports:
             - containerPort: 8000
           resources:

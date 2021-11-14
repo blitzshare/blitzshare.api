@@ -1,6 +1,6 @@
 kind: Namespace
 apiVersion: v1
 metadata:
-  name: file-share-ns
+  name: blitzshare-api-ns
   labels:
-    name: file-share
+    name: blitzshare-api
