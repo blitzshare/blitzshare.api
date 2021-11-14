@@ -19,7 +19,7 @@ k8s-apply:
 	kubectl apply -f k8s/config/namespace.yaml
 	kubectl apply -f k8s/config/deployment.yaml
 	kubectl apply -f k8s/config/service.yaml
-	kubectl apply -f k8s/config/redis-master.yml
+	kubectl apply -f k8s/config/redis.yml
 
 k8s-destroy:
 	kubectl delete namespace blitzshare-api-ns

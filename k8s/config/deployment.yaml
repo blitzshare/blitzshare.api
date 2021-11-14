@@ -30,7 +30,7 @@ spec:
             - name: S3_BUCKET_REGION
               value: "*********"
             - name: REDIS_URL
-              value: redis.svc.cluster.local
+              value: "redis-svc.blitzshare-api-ns.svc.cluster.local:6379"
           ports:
             - containerPort: 8000
           resources:
