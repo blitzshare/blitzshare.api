@@ -1,10 +1,11 @@
+
 package endpoints_test
 
 import (
 	"net/http/httptest"
 	"testing"
 
-	"blitzshare.fileshare.api/app/server/endpoints"
+	"blitzshare.api/app/server/endpoints"
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 )

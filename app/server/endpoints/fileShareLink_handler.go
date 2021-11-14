@@ -3,8 +3,8 @@ package endpoints
 import (
 	"net/http"
 
-	dep "blitzshare.fileshare.api/app/dependencies"
-	"blitzshare.fileshare.api/app/server/services"
+	dep "blitzshare.api/app/dependencies"
+	"blitzshare.api/app/server/services"
 	"github.com/gin-gonic/gin"
 )
 

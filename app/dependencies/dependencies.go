@@ -1,6 +1,6 @@
 package dependencies
 
-import "blitzshare.fileshare.api/app/config"
+import "blitzshare.api/app/config"
 
 type Dependencies struct {
 	Config config.Config

@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  namespace: file-share-ns
-  name: file-share-deployment
+  namespace: blitzshare-api-ns
+  name: blitzshare-api-deployment
   labels:
-    app: file-share
+    app: blitzshare-api
 spec:
   selector:
     matchLabels:
-      app: file-share
+      app: blitzshare-api
   replicas: 1
   template:
     metadata:
       labels:
-        app: file-share
+        app: blitzshare-api
     spec:
       containers:
-        - name: file-share
+        - name: blitzshare-api
           image: ${DOCKER_IMAGE_URL}
           env:
             - name: ENV

@@ -8,7 +8,7 @@ import (
 	"sync"
 	"time"
 
-	"blitzshare.fileshare.api/app/dependencies"
+	"blitzshare.api/app/dependencies"
 )
 
 type Server struct {

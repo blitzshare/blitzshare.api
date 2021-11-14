@@ -1,1 +1,1 @@
-kubectl delete namespace file-share-ns
+kubectl delete namespace blitzshare-api-ns

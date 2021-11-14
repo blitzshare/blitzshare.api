@@ -14,3 +14,26 @@ start:
 
 build:
 	GIN_MODE=release go build -o entrypoint cmd/main.go
+
+k8s-apply:
+	kubectl apply -f k8s/config/namespace.yaml
+	kubectl apply -f k8s/config/deployment.yaml
+	kubectl apply -f k8s/config/service.yaml
+	kubectl apply -f k8s/config/redis.yml
+
+k8s-destroy:
+	kubectl delete namespace blitzshare-api-ns
+
+
+build-deploy:
+	make dockerhub-build
+	make k8s-apply
+
+
+dockerhub-build:
+	docker build -t blitzshare.api:latest .
+	docker tag blitzshare.api:latest iamkimchi/blitzshare.api:latest
+	docker push iamkimchi/blitzshare.api:latest
+
+minikube-svc:
+	minikube service blitzshare-api-svc -n blitzshare-api-ns

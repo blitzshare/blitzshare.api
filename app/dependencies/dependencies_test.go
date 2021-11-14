@@ -5,9 +5,9 @@ import (
 	"os"
 	"testing"
 
-	"blitzshare.fileshare.api/app/dependencies"
+	"blitzshare.api/app/dependencies"
 
-	"blitzshare.fileshare.api/app/config"
+	"blitzshare.api/app/config"
 	"github.com/stretchr/testify/assert"
 )
 
