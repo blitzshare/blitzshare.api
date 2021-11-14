@@ -42,7 +42,6 @@ func setPeerRedisRecord(d *deps.Dependencies, peer *model.PeerRegistry) {
 
 func getPeerRedisRecord(d *deps.Dependencies, pass string ) string{
 	client := getClient(d)
-	pong, err := client.Ping().Result()
 	log.Infoln("getPeerRedisRecord", pass)
 	result, err := client.Get(pass).Result()
 	if err != nil {
