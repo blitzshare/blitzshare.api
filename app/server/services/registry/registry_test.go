@@ -19,12 +19,12 @@ func TestPeerRegistry(t *testing.T) {
 var _ = Describe("Test Registry", func() {
 	Context("Given a registry", func() {
 		var deps *dependencies.Dependencies
-		BeforeSuite(func(){
+		BeforeSuite(func() {
 			server := config.Server{Port: 323}
-			settings := config.Settings{ RedisUrl: "redis.svc.cluster.local"}
+			settings := config.Settings{RedisUrl: "redis.svc.cluster.local"}
 			config := config.Config{
-				Server: server,
-				Settings:settings,
+				Server:   server,
+				Settings: settings,
 			}
 			deps, _ = dependencies.NewDependencies(config)
 		})
@@ -35,15 +35,17 @@ var _ = Describe("Test Registry", func() {
 		})
 		It("should return error for not found peers", func() {
 			r := model.PeerRegistry{MultiAddr: "/ip4/10.101.18.26/tcp/63785/p2p/12D3KooWPGR", OneTimePass: "clown-descanting-booing-crassness"}
-			multiAddr := registry.RegisterPeer(deps, &r)
+			multiAddr, err := registry.RegisterPeer(deps, &r)
 			Expect(multiAddr).To(Equal(r.MultiAddr))
+			Expect(err).To(BeNil())
 			fetchedMultiAddr, err := registry.GetPeerMultiAddr(deps, "neverseen-pass")
 			Expect(fetchedMultiAddr).To(Equal(""))
 			Expect(err.Error()).To(Equal("PeerNotFoundError"))
 		})
 		It("should register peer and return multiaddress", func() {
 			r := model.PeerRegistry{MultiAddr: "/ip4/10.101.18.26/tcp/63785/p2p/12D3KooWPGR", OneTimePass: "boom-descanting-booing-crassness"}
-			multiAddr := registry.RegisterPeer(deps, &r)
+			multiAddr, err := registry.RegisterPeer(deps, &r)
+			Expect(err).To(BeNil())
 			Expect(multiAddr).To(Equal(r.MultiAddr))
 			fetchedMultiAddr, err := registry.GetPeerMultiAddr(deps, r.OneTimePass)
 			Expect(fetchedMultiAddr).To(Equal(r.MultiAddr))

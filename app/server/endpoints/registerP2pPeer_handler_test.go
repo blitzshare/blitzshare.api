@@ -17,18 +17,18 @@ func TestP2pPeerRegisterHandler(t *testing.T) {
 	RunSpecs(t, "TestP2pPeerRegisterHandler")
 }
 
-
 var _ = Describe("Register P2p Endpoint", func() {
 	var deps *dependencies.Dependencies
-	BeforeSuite(func(){
+	BeforeSuite(func() {
 		server := config.Server{Port: 323}
-		settings := config.Settings{ RedisUrl: "redis.svc.cluster.local"}
+		settings := config.Settings{RedisUrl: "redis.svc.cluster.local"}
 		config := config.Config{
-			Server: server,
-			Settings:settings,
+			Server:   server,
+			Settings: settings,
 		}
 		deps, _ = dependencies.NewDependencies(config)
 	})
+
 	Context("Given a RegisterP2pHandler", func() {
 		It("expected 400", func() {
 			w := httptest.NewRecorder()
@@ -36,6 +36,5 @@ var _ = Describe("Register P2p Endpoint", func() {
 			endpoints.RegisterP2pPeerHandler(deps)(c)
 			Expect(w.Code).To(Equal(400))
 		})
-
 	})
 })

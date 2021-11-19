@@ -18,6 +18,7 @@ spec:
       containers:
         - name: blitzshare-api
           image: iamkimchi/blitzshare.api:latest
+          imagePullPolicy: Always
           env:
             - name: ENV
               value: prod

@@ -20,6 +20,7 @@ k8s-apply:
 	kubectl apply -f k8s/config/deployment.yaml
 	kubectl apply -f k8s/config/service.yaml
 	kubectl apply -f k8s/config/redis.yml
+	kubectl rollout restart deployment blitzshare-api-deployment
 
 k8s-destroy:
 	kubectl delete namespace blitzshare-api-ns
@@ -31,7 +32,7 @@ build-deploy:
 
 
 dockerhub-build:
-	docker build -t blitzshare.api:latest .
+	docker buildx build --platform linux/amd64 -t  blitzshare.api:latest .
 	docker tag blitzshare.api:latest iamkimchi/blitzshare.api:latest
 	docker push iamkimchi/blitzshare.api:latest
 
