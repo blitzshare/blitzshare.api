@@ -20,7 +20,7 @@ k8s-apply:
 	kubectl apply -f k8s/config/deployment.yaml
 	kubectl apply -f k8s/config/service.yaml
 	kubectl apply -f k8s/config/redis.yml
-	kubectl rollout restart deployment blitzshare-api-deployment
+	kubectl rollout restart deployment blitzshare-api-deployment --namespace blitzshare-api-ns
 
 k8s-destroy:
 	kubectl delete namespace blitzshare-api-ns
