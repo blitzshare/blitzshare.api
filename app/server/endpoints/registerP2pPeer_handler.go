@@ -15,7 +15,8 @@ func RegisterP2pPeerHandler(deps *dependencies.Dependencies) func(c *gin.Context
 	return func(c *gin.Context) {
 		var r model.PeerRegistry
 		if err := c.ShouldBindWith(&r, binding.JSON); err == nil {
-			c.JSON(http.StatusOK, registry.RegisterPeer(deps, &r))
+			v, _ := registry.RegisterPeer(deps, &r)
+			c.JSON(http.StatusOK, v)
 		} else {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		}

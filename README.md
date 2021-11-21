@@ -36,3 +36,10 @@ minikube tunnel
 
 resources
 test: https://golang.hotexamples.com/examples/github.com.gin-gonic.gin/-/CreateTestContext/golang-createtestcontext-function-examples.html
+
+
+IP=localhost
+curl -XPOST ${IP}/p2p/registry -d '{"multiAddr": "ip/0.0.0.0/test", "oneTimePass":"secret-pass"}'
+curl -XGET ${IP}/p2p/registry/secret-pass
+
+curl -XGET ${IP}/p2p/registry/esotericist-syndectomy-sodiotartrate-Dorcas
