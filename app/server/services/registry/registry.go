@@ -11,8 +11,6 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-var registry map[string]string
-
 type PeerNotFoundError struct {
 	arg  int
 	prob string
@@ -32,49 +30,35 @@ func getClient(d *deps.Dependencies) *redis.Client {
 	return client
 }
 
-type GetSet interface {
-	set(d *deps.Dependencies, peer *model.PeerRegistry) bool
-	getPeerRedisRecord(d *deps.Dependencies, pass string) (string, error)
-}
-
 func set(d *deps.Dependencies, key string, value string) bool {
 	client := getClient(d)
-	pong, err := client.Ping().Result()
-	log.Infoln("set", pong, err)
-	result, err := client.Set(key, value, time.Second*10000).Result()
+	_, err := client.Set(key, value, time.Second*10000).Result()
 	if err != nil {
-		log.Errorf("client.Set err [%s]\n", err)
+		log.Errorf("client.Set err", err)
+		return false
 	} else {
-		log.Infof("client.Set [%s]\n", result)
+		log.Infof("client.Set {%s : %s}", key, value)
+		return true
 	}
-	return err != nil
 }
 
 func get(d *deps.Dependencies, key string) (string, error) {
 	client := getClient(d)
-	result, err := client.Get(key).Result()
-	if err != nil {
-		log.Errorf("client.Get err [%s]\n", err)
-	} else {
-		log.Infof("client.Get [%s]\n", result)
-	}
-	return result, err
+	return client.Get(key).Result()
 }
 
-func RegisterPeer(d *deps.Dependencies, peer *model.PeerRegistry) (string, error) {
+func RegisterPeer(d *deps.Dependencies, peer *model.PeerRegistry) error {
 	if set(d, str.SanatizeStr(peer.OneTimePass), str.SanatizeStr(peer.MultiAddr)) {
-		return peer.MultiAddr, nil
+		return nil
 	}
-	return "", nil
+	return errors.New("Failed to register peer")
 }
 
 func GetPeerMultiAddr(d *deps.Dependencies, oneTimePass string) (string, error) {
 	log.Infoln("GetPeerMultiAddr", oneTimePass)
-	if registry != nil {
-		result, err := get(d, oneTimePass)
-		if err != nil {
-			return result, err
-		}
+	result, err := get(d, oneTimePass)
+	if err == nil {
+		return result, err
 	}
 	return "", errors.New("PeerNotFoundError")
 }

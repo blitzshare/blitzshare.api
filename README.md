@@ -39,7 +39,7 @@ test: https://golang.hotexamples.com/examples/github.com.gin-gonic.gin/-/CreateT
 
 
 IP=localhost
-curl -XPOST ${IP}/p2p/registry -d '{"multiAddr": "ip/0.0.0.0/test", "oneTimePass":"secret-pass"}'
-curl -XGET ${IP}/p2p/registry/secret-pass
+curl -XPOST localhost/p2p/registry -d '{"multiAddr": "ip/0.0.0.0/test", "oneTimePass":"secret-pass"}'
+curl -XGET localhost/p2p/registry/secret-pass
 
-curl -XGET ${IP}/p2p/registry/esotericist-syndectomy-sodiotartrate-Dorcas
+curl -XGET localhost/p2p/registry/esotericist-syndectomy-sodiotartrate-Dorcas
