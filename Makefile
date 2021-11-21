@@ -32,7 +32,8 @@ build-deploy:
 
 
 dockerhub-build:
-	docker buildx build --platform linux/amd64 -t  blitzshare.api:latest .
+	# docker buildx build --platform linux/amd64 -t  blitzshare.api:latest .
+	docker build -t  blitzshare.api:latest .
 	docker tag blitzshare.api:latest iamkimchi/blitzshare.api:latest
 	docker push iamkimchi/blitzshare.api:latest
 
