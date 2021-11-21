@@ -5,8 +5,8 @@ import (
 	"time"
 
 	deps "blitzshare.api/app/dependencies"
-
 	"blitzshare.api/app/model"
+	"blitzshare.api/app/server/services/str"
 	"github.com/go-redis/redis"
 	log "github.com/sirupsen/logrus"
 )
@@ -62,7 +62,7 @@ func get(d *deps.Dependencies, key string) (string, error) {
 }
 
 func RegisterPeer(d *deps.Dependencies, peer *model.PeerRegistry) (string, error) {
-	if set(d, peer.OneTimePass, peer.MultiAddr) {
+	if set(d, str.SanatizeStr(peer.OneTimePass), str.SanatizeStr(peer.MultiAddr)) {
 		return peer.MultiAddr, nil
 	}
 	return "", nil
