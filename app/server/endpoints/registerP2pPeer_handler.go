@@ -20,13 +20,13 @@ func RegisterP2pPeerHandler(deps *dependencies.Dependencies) func(c *gin.Context
 			msgId, err := events.EmitP2pPeerRegistyEvent(deps, &r)
 			if err != nil {
 				log.Errorln("EmitP2pPeerRegistyEvent", err)
-				c.JSON(http.StatusInternalServerError, gin.H{"ackId": msgId})
+				c.Header("Client", "blitzshare.api")
+				c.JSON(http.StatusInternalServerError, nil)
 			} else {
-				c.JSON(http.StatusAccepted, r)
+				c.JSON(http.StatusAccepted, gin.H{"ackId": msgId})
 			}
 		} else {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		}
-
 	}
 }
