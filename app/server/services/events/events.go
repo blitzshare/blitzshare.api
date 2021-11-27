@@ -20,10 +20,10 @@ func NewNodeJoinedEvent(nodeId string) *NodeJoinedEvent {
 
 const (
 	ClientId    = "bootstrap-api"
-	ChannelName = "p2p-peer-registry"
+	ChannelName = "p2p-peer-registry-cmd"
 )
 
-func submitEvent(queueUrl string, event []byte, channelName string) (string, error) {
+func emitEvent(queueUrl string, event []byte, channelName string) (string, error) {
 	ctx, _ := context.WithCancel(context.Background())
 	client, err := kubemq.NewClient(ctx,
 		kubemq.WithAddress(queueUrl, 50000),
@@ -49,14 +49,14 @@ func submitEvent(queueUrl string, event []byte, channelName string) (string, err
 	return sendResult.MessageID, nil
 }
 
-func EmitP2pPeerRegistyEvent(deps *dependencies.Dependencies, event *model.PeerRegistry) (string, error) {
-	log.Debugln("EmitP2pPeerRegistyEvent", event)
+func EmitP2pPeerRegistyCmd(deps *dependencies.Dependencies, event *model.P2pPeerRegistryCmd) (string, error) {
+	log.Debugln("EmitP2pPeerRegistryCmd", event)
 	bEvent, err := json.Marshal(event)
 	if err != nil {
 		log.Fatal(err)
 		return "", err
 	}
-	msgId, err := submitEvent(deps.Config.Settings.QueueUrl, bEvent, ChannelName)
+	msgId, err := emitEvent(deps.Config.Settings.QueueUrl, bEvent, ChannelName)
 	if err != nil {
 		return "", err
 	}

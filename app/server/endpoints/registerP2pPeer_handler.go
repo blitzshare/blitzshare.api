@@ -14,10 +14,10 @@ import (
 
 func RegisterP2pPeerHandler(deps *dependencies.Dependencies) func(c *gin.Context) {
 	return func(c *gin.Context) {
-		var r model.PeerRegistry
+		var r model.P2pPeerRegistryCmd
 		log.Infoln("RegisterP2pPeerHandler", r)
 		if err := c.ShouldBindWith(&r, binding.JSON); err == nil {
-			msgId, err := events.EmitP2pPeerRegistyEvent(deps, &r)
+			msgId, err := events.EmitP2pPeerRegistyCmd(deps, &r)
 			if err != nil {
 				log.Errorln("EmitP2pPeerRegistyEvent", err)
 				c.Header("Client", "blitzshare.api")

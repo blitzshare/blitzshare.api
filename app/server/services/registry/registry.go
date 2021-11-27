@@ -47,7 +47,7 @@ func get(d *deps.Dependencies, key string) (string, error) {
 	return client.Get(key).Result()
 }
 
-func RegisterPeer(d *deps.Dependencies, peer *model.PeerRegistry) error {
+func RegisterPeer(d *deps.Dependencies, peer *model.P2pPeerRegistryCmd) error {
 	if set(d, str.SanatizeStr(peer.OneTimePass), str.SanatizeStr(peer.MultiAddr)) {
 		return nil
 	}

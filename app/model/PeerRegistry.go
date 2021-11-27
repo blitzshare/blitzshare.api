@@ -1,7 +1,6 @@
 package model
 
-type PeerRegistry struct {
-	MultiAddr   string `form:"multiAddr" binding:"required"`
-	OneTimePass string `form:"oneTimePass" binding:"required"`
+type P2pPeerRegistryCmd struct {
+	MultiAddr   string `form:"multiAddr" binding:"required" json:"multiAddr"`
+	OneTimePass string `form:"oneTimePass" binding:"required" json:"oneTimePass"`
 }
-
