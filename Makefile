@@ -16,10 +16,9 @@ build:
 	GIN_MODE=release go build -o entrypoint cmd/main.go
 
 k8s-apply:
-	kubectl apply -f k8s/config/namespace.yaml
-	kubectl apply -f k8s/config/deployment.yaml
-	kubectl apply -f k8s/config/service.yaml
-	kubectl apply -f k8s/config/redis.yml
+	kubectl apply -f k8s/namespace.yaml
+	kubectl apply -f k8s//deployment.yaml
+	kubectl apply -f k8s/service.yaml
 	kubectl rollout restart deployment blitzshare-api-deployment --namespace blitzshare-api-ns
 
 k8s-destroy:
