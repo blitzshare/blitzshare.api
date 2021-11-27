@@ -17,6 +17,7 @@ type Settings struct {
 	S3BucketUploadKey string `envconfig:"S3_BUCKET_UPLOAD_KEY"`
 	S3BucketRegion    string `envconfig:"S3_BUCKET_REGION"`
 	RedisUrl          string `envconfig:"REDIS_URL" default:"redis.svc.cluster.local:6379"`
+	QueueUrl          string `envconfig:"QUEUE_URL"`
 }
 
 func Load() (Config, error) {

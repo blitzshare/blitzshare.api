@@ -42,4 +42,4 @@ IP=localhost
 curl -i -XPOST 10.104.137.88/p2p/registry -d '{"multiAddr": "ip/0.0.0.0/test", "oneTimePass":"secret-pass"}'
 curl -i -XGET localhost/p2p/registry/secret-pass
 
-curl -i -XGET localhost/p2p/registry/esotericist-syndectomy-sodiotartrate-Dorcas
+curl -i -XGET 10.104.137.88/p2p/registry/secret-pass

@@ -7,26 +7,26 @@ import (
 
 	"blitzshare.api/app/dependencies"
 	"blitzshare.api/app/model"
-	"blitzshare.api/app/server/services/registry"
+	"blitzshare.api/app/server/services/events"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
 )
 
 func RegisterP2pPeerHandler(deps *dependencies.Dependencies) func(c *gin.Context) {
 	return func(c *gin.Context) {
-		var r model.PeerRegistry
+		var r model.P2pPeerRegistryCmd
 		log.Infoln("RegisterP2pPeerHandler", r)
 		if err := c.ShouldBindWith(&r, binding.JSON); err == nil {
-			e := registry.RegisterPeer(deps, &r)
-			if e != nil {
-				log.Errorln("RegisterP2pPeerHandler", e)
-				c.JSON(http.StatusInternalServerError, r)
+			msgId, err := events.EmitP2pPeerRegistyCmd(deps, &r)
+			if err != nil {
+				log.Errorln("EmitP2pPeerRegistyEvent", err)
+				c.Header("Client", "blitzshare.api")
+				c.JSON(http.StatusInternalServerError, nil)
 			} else {
-				c.JSON(http.StatusOK, r)
+				c.JSON(http.StatusAccepted, gin.H{"ackId": msgId})
 			}
 		} else {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		}
-
 	}
 }

@@ -26,6 +26,8 @@ spec:
               value: "8000"
             - name: REDIS_URL
               value: "redis-svc.blitzshare-redis-ns.svc.cluster.local:6379"
+            - name: QUEUE_URL
+              value: kubemq-cluster-grpc.kubemq.svc.cluster.local
           ports:
             - containerPort: 8000
           resources:
