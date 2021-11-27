@@ -24,12 +24,6 @@ spec:
               value: prod
             - name: PORT
               value: "8000"
-            - name: S3_BUCKET_NAME
-              value: blitzshare-fileshare-store
-            - name: S3_BUCKET_UPLOAD_KEY
-              value: "share"
-            - name: S3_BUCKET_REGION
-              value: "*********"
             - name: REDIS_URL
               value: "redis-svc.blitzshare-api-ns.svc.cluster.local:6379"
             - name: QUEUE_URL
