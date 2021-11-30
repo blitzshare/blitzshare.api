@@ -1,5 +1,6 @@
 install:
 	go install golang.org/x/tools/cmd/goimports@latest
+	go get -d github.com/vektra/mockery/v2/.../
 	go mod vendor
 
 test:
@@ -31,11 +32,13 @@ build-deploy:
 
 docker-build:
 	docker buildx build --platform linux/amd64 -t  blitzshare.api:latest .
-	docker build -t  blitzshare.api:latest .
-	docker tag blitzshare.api:latest iamkimchi/blitzshare.api:latest
+	docker build -t blitzshare.api:latest .
+	minikube image load blitzshare.api:latest
+	
 	
 dockerhub-build:
 	make dockerhub-build
+	docker tag blitzshare.api:latest iamkimchi/blitzshare.api:latest
 	docker push iamkimchi/blitzshare.api:latest
 
 minikube-svc:
