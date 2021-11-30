@@ -29,11 +29,13 @@ build-deploy:
 	make dockerhub-build
 	make k8s-apply
 
-
-dockerhub-build:
-	# docker buildx build --platform linux/amd64 -t  blitzshare.api:latest .
+docker-build:
+	docker buildx build --platform linux/amd64 -t  blitzshare.api:latest .
 	docker build -t  blitzshare.api:latest .
 	docker tag blitzshare.api:latest iamkimchi/blitzshare.api:latest
+	
+dockerhub-build:
+	make dockerhub-build
 	docker push iamkimchi/blitzshare.api:latest
 
 minikube-svc:
