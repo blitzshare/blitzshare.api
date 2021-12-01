@@ -1,19 +1,16 @@
 package registry
 
 import (
-	"errors"
-
-	deps "blitzshare.api/app/dependencies"
 	"github.com/go-redis/redis"
 	log "github.com/sirupsen/logrus"
 )
 
 var client *redis.Client
 
-func getClient(d *deps.Dependencies) *redis.Client {
+func getClient(addr string) *redis.Client {
 	if client == nil {
 		client = redis.NewClient(&redis.Options{
-			Addr:     d.Config.Settings.RedisUrl,
+			Addr:     addr,
 			Password: "",
 		})
 		pong, _ := client.Ping().Result()
@@ -22,15 +19,20 @@ func getClient(d *deps.Dependencies) *redis.Client {
 	return client
 }
 
-func get(d *deps.Dependencies, key string) (string, error) {
-	client := getClient(d)
-	return client.Get(key).Result()
+type Registry interface {
+	Get(otp string) (string, error)
 }
 
-func GetPeerMultiAddr(d *deps.Dependencies, pass string) (string, error) {
-	result, err := get(d, pass)
-	if err == nil {
-		return result, err
-	}
-	return "", errors.New("PeerNotFoundError")
+type RegistryIml struct {
+	redisUrl string
+}
+
+func NewRegistry(redisUrl string) Registry {
+
+	return &RegistryIml{redisUrl: redisUrl}
+}
+
+func (impl *RegistryIml) Get(otp string) (string, error) {
+	client := getClient(impl.redisUrl)
+	return client.Get(otp).Result()
 }

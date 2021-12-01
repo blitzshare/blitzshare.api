@@ -13,7 +13,7 @@ func NewRouter(deps *dependencies.Dependencies) *gin.Engine {
 	}
 
 	router.GET("/test", endpoints.HealthHandler())
-	router.GET("/file-share-link", endpoints.FileShareHandler(deps))
+	//router.GET("/file-share-link", endpoints.FileShareHandler(deps))
 	router.POST("/p2p/registry", endpoints.RegisterP2pPeerHandler(deps))
 	router.GET("/p2p/registry/:id", endpoints.GetP2pPeerHandler(deps))
 
