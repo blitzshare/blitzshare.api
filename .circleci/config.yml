@@ -59,6 +59,7 @@ jobs:
       - run:
           name: docker build, tag & push
           command: |
+            docker login -u ${DOCKERHUB_USER} -p ${DOCKERHUB_PASSWORD}
             docker build -t  blitzshare.api:latest .
             docker tag blitzshare.api:latest iamkimchi/blitzshare.api:latest
             docker push iamkimchi/blitzshare.api:latest
