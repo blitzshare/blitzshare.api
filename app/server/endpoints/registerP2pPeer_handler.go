@@ -14,8 +14,10 @@ import (
 
 func RegisterP2pPeerHandler(deps *dependencies.Dependencies) func(c *gin.Context) {
 	return func(c *gin.Context) {
+		AddDefaultResponseHeaders(c)
 		var r model.P2pPeerRegistryCmd
 		log.Infoln("RegisterP2pPeerHandler", r.OneTimePass)
+
 		if err := c.ShouldBindWith(&r, binding.JSON); err == nil {
 			msgId, err := events.EmitP2pPeerRegistryCmd(deps, &r)
 			if err != nil {

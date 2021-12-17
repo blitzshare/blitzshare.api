@@ -31,9 +31,7 @@ build-deploy:
 	make k8s-apply
 
 docker-build:
-	docker buildx build --platform linux/amd64 -t  blitzshare.api:latest .
-	docker build -t blitzshare.api:latest .
-	minikube image load blitzshare.api:latest
+	docker build -t  blitzshare.api:latest .
 	
 	
 dockerhub-build:
@@ -43,3 +41,6 @@ dockerhub-build:
 
 minikube-svc:
 	minikube service blitzshare-api-svc -n blitzshare-ns
+
+build-mocks:
+	mockery --all --dir "./app/"
