@@ -5,7 +5,6 @@ import (
 
 	"blitzshare.api/app/dependencies"
 	"blitzshare.api/app/model"
-	"blitzshare.api/app/server/services/events"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
 )
@@ -15,7 +14,7 @@ func RegisterP2pPeerHandler(deps *dependencies.Dependencies) func(c *gin.Context
 		AddDefaultResponseHeaders(c)
 		var r model.P2pPeerRegistryCmd
 		if err := c.ShouldBindWith(&r, binding.JSON); err == nil {
-			msgId, err := events.EmitP2pPeerRegistryCmd(deps, &r)
+			msgId, err := deps.EventEmit.EmitP2pPeerRegistryCmd(deps.Config.Settings.QueueUrl, deps.Config.ClientId, &r)
 			if err != nil {
 				c.JSON(http.StatusInternalServerError, nil)
 			} else {

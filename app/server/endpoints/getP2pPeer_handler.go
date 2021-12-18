@@ -10,8 +10,8 @@ import (
 func GetP2pPeerHandler(deps *dependencies.Dependencies) func(c *gin.Context) {
 	return func(c *gin.Context) {
 		AddDefaultResponseHeaders(c)
-		id := c.Params.ByName("id")
-		multiAddr, err := deps.Registry.Get(id)
+		otp := c.Params.ByName("otp")
+		multiAddr, err := deps.Registry.Get(otp)
 		if err == nil {
 			c.JSON(http.StatusOK, gin.H{"multiAddr": multiAddr})
 		} else {

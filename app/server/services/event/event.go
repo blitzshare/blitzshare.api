@@ -1,10 +1,9 @@
-package events
+package event
 
 import (
 	"context"
 	"encoding/json"
 
-	"blitzshare.api/app/dependencies"
 	"blitzshare.api/app/model"
 	"github.com/kubemq-io/kubemq-go"
 	log "github.com/sirupsen/logrus"
@@ -19,17 +18,27 @@ func NewNodeJoinedEvent(nodeId string) *NodeJoinedEvent {
 }
 
 const (
-	ClientId    = "bootstrap-api"
 	ChannelName = "p2p-peer-registry-cmd"
 )
 
 const KubemqDefaultPort = 50000
 
-func emitEvent(queueUrl string, event []byte, channelName string) (string, error) {
+type EventEmit interface {
+	EmitP2pPeerRegistryCmd(queueUrl string, clientId string, event *model.P2pPeerRegistryCmd) (string, error)
+}
+
+type EventEmitImpl struct {
+}
+
+func NewEventEmit() EventEmit {
+	return &EventEmitImpl{}
+}
+
+func emitEvent(queueUrl string, clientId string, event []byte, channelName string) (string, error) {
 	ctx, _ := context.WithCancel(context.Background())
 	client, err := kubemq.NewClient(ctx,
 		kubemq.WithAddress(queueUrl, KubemqDefaultPort),
-		kubemq.WithClientId(ClientId),
+		kubemq.WithClientId(clientId),
 		kubemq.WithTransportType(kubemq.TransportTypeGRPC))
 	defer client.Close()
 	if err != nil {
@@ -42,13 +51,13 @@ func emitEvent(queueUrl string, event []byte, channelName string) (string, error
 	return sendResult.MessageID, err
 }
 
-func EmitP2pPeerRegistryCmd(deps *dependencies.Dependencies, event *model.P2pPeerRegistryCmd) (string, error) {
+func (*EventEmitImpl) EmitP2pPeerRegistryCmd(queueUrl string, clientId string, event *model.P2pPeerRegistryCmd) (string, error) {
 	log.Debugln("EmitP2pPeerRegistryCmd", event)
 	bEvent, err := json.Marshal(event)
 	if err != nil {
 		log.Fatalln(err)
 	}
-	msgId, err := emitEvent(deps.Config.Settings.QueueUrl, bEvent, ChannelName)
+	msgId, err := emitEvent(queueUrl, clientId, bEvent, ChannelName)
 	if err != nil {
 		log.Fatalln(err)
 	}
