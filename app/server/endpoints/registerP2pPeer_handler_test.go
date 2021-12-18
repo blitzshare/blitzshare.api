@@ -3,6 +3,7 @@ package endpoints_test
 import (
 	"bytes"
 	"encoding/json"
+	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 
@@ -81,6 +82,11 @@ var _ = Describe("Register P2p Endpoint", func() {
 			})
 			req, _ := http.NewRequest("POST", "/p2p/registry", bytes.NewReader(body))
 			router.ServeHTTP(w, req)
+			ack := model.PeerRegistryAckResponse{}
+			b, err := ioutil.ReadAll(w.Body)
+			json.Unmarshal(b, &ack)
+			Expect(err).To(BeNil())
+			Expect(ack.AckId).To(Equal(AckId))
 			Expect(w.Code).To(Equal(http.StatusAccepted))
 			Expect(w.Header().Get("X-Blitzshare-Service")).To(Equal("blitzshare.api"))
 		})

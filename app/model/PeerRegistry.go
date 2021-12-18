@@ -8,3 +8,7 @@ type P2pPeerRegistryCmd struct {
 type MultiAddrResponse struct {
 	MultiAddr string `binding:"required" json:"multiAddr"`
 }
+
+type PeerRegistryAckResponse struct {
+	AckId string `binding:"required" json:"ackId"`
+}

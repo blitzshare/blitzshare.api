@@ -4,7 +4,7 @@ install:
 	go mod vendor
 
 test:
-	ENV=test && go test -v ./... -v -count=1
+	go test -v ./app/... -v -count=1 -cover
 
 fix-format:
 	gofmt -w -s app/ pkg/ cmd/ mocks/ testhelpers
