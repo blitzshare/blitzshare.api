@@ -1,8 +1,8 @@
 package model
 
 type P2pPeerRegistryCmd struct {
-	MultiAddr   string `form:"multiAddr" binding:"required" json:"multiAddr"`
-	OneTimePass string `form:"oneTimePass" binding:"required" json:"oneTimePass"`
+	MultiAddr string `form:"multiAddr" binding:"required" json:"multiAddr"`
+	Otp       string `form:"otp" binding:"required" json:"oneTimePass"`
 }
 
 type MultiAddrResponse struct {

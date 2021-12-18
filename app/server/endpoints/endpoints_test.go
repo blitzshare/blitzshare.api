@@ -9,5 +9,6 @@ import (
 
 func TestEndpoints(t *testing.T) {
 	RegisterFailHandler(Fail)
-	RunSpecs(t, "Test Endpoints")
+	RunSpecs(t, "Endpoints Test")
+	PanicWith(Panic)
 }

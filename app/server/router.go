@@ -20,9 +20,10 @@ func NewRouter(deps *dependencies.Dependencies) *gin.Engine {
 		gin.SetMode(gin.ReleaseMode)
 	}
 	registerDefaultRoute(router)
+
 	router.GET("/test", endpoints.HealthHandler())
 	router.POST("/p2p/registry", endpoints.RegisterP2pPeerHandler(deps))
-	router.GET("/p2p/registry/:id", endpoints.GetP2pPeerHandler(deps))
+	router.GET("/p2p/registry/:otp", endpoints.GetP2pPeerHandler(deps))
 
 	return router
 }

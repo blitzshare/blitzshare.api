@@ -28,7 +28,6 @@ type RegistryIml struct {
 }
 
 func NewRegistry(redisUrl string) Registry {
-
 	return &RegistryIml{redisUrl: redisUrl}
 }
 

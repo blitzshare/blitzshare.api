@@ -5,6 +5,7 @@ import "github.com/kelseyhightower/envconfig"
 type Config struct {
 	Server   Server
 	Settings Settings
+	ClientId string
 }
 
 type Server struct {
@@ -23,7 +24,9 @@ type Settings struct {
 func Load() (Config, error) {
 	err := LoadEnvironment()
 
-	cfg := Config{}
+	cfg := Config{
+		ClientId: "blitzshare.api",
+	}
 	err = envconfig.Process("settings", &cfg)
 	return cfg, err
 }
