@@ -1,6 +1,7 @@
 package endpoints_test
 
 import (
+	"net/http"
 	"net/http/httptest"
 
 	"blitzshare.api/app/server/endpoints"
@@ -15,7 +16,7 @@ var _ = Describe("Register P2p Endpoint", func() {
 			w := httptest.NewRecorder()
 			c, _ := gin.CreateTestContext(w)
 			endpoints.HealthHandler()(c)
-			Expect(w.Code).To(Equal(200))
+			Expect(w.Code).To(Equal(http.StatusOK))
 			Expect(w.Header().Get("X-Blitzshare-Service")).To(Equal("blitzshare.api"))
 		})
 	})
