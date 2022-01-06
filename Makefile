@@ -6,6 +6,10 @@ install:
 test:
 	go test -v ./app/... -v -count=1 -cover
 
+
+acceptance-tests:
+	go test -v ./test/... -v -count=1
+
 fix-format:
 	gofmt -w -s app/ pkg/ cmd/ mocks/ testhelpers
 	goimports -w app/ pkg/ cmd/ mocks/ testhelpers
