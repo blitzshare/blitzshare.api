@@ -1,7 +1,6 @@
 package acceptance
 
 import (
-	"fmt"
 	"testing"
 	"time"
 
@@ -15,10 +14,6 @@ func TestP2pRegistry(t *testing.T) {
 	// since we're in event driven, we need to wasit some time for the request to be processed
 	time.Sleep(time.Second * 2)
 	addr := GetPeerRegistry(t)
-
 	assert.NotNil(t, addr.MultiAddr)
-	fmt.Println("@@@@", addr.MultiAddr)
-	fmt.Println("@@@@", addr)
-	// assert.True(t, len(addr.MultiAddr) > 5)
-
+	assert.NotEmpty(t, addr.MultiAddr)
 }
