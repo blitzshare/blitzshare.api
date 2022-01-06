@@ -101,11 +101,11 @@ workflows:
             branches:
               only:
                 - main
-      - deploy_job:
-          context: eu-west-1
-          requires:
-            - build_job
-          filters:
-            branches:
-              only:
-                - main
+      # - deploy_job:
+      #     context: eu-west-1
+      #     requires:
+      #       - build_job
+      #     filters:
+      #       branches:
+      #         only:
+      #           - main
