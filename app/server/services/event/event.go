@@ -44,7 +44,7 @@ func emitEvent(queueUrl string, clientId string, event []byte, channelName strin
 	if err != nil {
 		log.Fatalln("cant connect to queue", queueUrl, err)
 	}
-	log.Infoln("emitEvent", channelName, event)
+	log.Infoln("emitEvent", channelName)
 	sendResult, err := client.NewQueueMessage().
 		SetChannel(channelName).
 		SetBody(event).
