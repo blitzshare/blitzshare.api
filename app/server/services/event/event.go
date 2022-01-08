@@ -44,6 +44,7 @@ func emitEvent(queueUrl string, clientId string, event []byte, channelName strin
 	if err != nil {
 		log.Fatalln("cant connect to queue", queueUrl, err)
 	}
+	log.Infoln("emitEvent", channelName, event)
 	sendResult, err := client.NewQueueMessage().
 		SetChannel(channelName).
 		SetBody(event).
@@ -52,7 +53,7 @@ func emitEvent(queueUrl string, clientId string, event []byte, channelName strin
 }
 
 func (*EventEmitImpl) EmitP2pPeerRegistryCmd(queueUrl string, clientId string, event *model.P2pPeerRegistryCmd) (string, error) {
-	log.Debugln("EmitP2pPeerRegistryCmd", event)
+	log.Infoln("EmitP2pPeerRegistryCmd")
 	bEvent, err := json.Marshal(event)
 	if err != nil {
 		log.Fatalln(err)

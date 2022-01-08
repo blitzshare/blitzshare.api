@@ -18,7 +18,6 @@ var _ = Describe("Register P2p Endpoint", func() {
 			endpoints.HealthHandler()(c)
 			Expect(w.Code).To(Equal(http.StatusOK))
 			Expect(w.Header().Get("X-Blitzshare-Service")).To(Equal("blitzshare.api"))
-			// Ω(w.Header().Get("X-Blitzshare-Service")).To(Equal("blitzshare.api"))
 		})
 	})
 })

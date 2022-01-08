@@ -9,4 +9,5 @@ FROM alpine
 WORKDIR /app
 COPY --from=builder /go/src/entrypoint /app/
 EXPOSE 63785
+ENV GIN_MODE=release
 ENTRYPOINT ["/app/entrypoint"]
