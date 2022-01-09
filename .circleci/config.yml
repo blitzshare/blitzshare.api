@@ -48,7 +48,7 @@ jobs:
     docker:
       - image: circleci/golang:1.17.2
     environment:
-      LOCAL_DOCKER_IMAGE: blitzshare-api
+      PROJ_NAME: blitzshare.api
     steps:
       - checkout
       - kubernetes/install-kubectl
@@ -59,10 +59,11 @@ jobs:
       - run:
           name: docker build, tag & push
           command: |
+            TAG=latest
             docker login -u ${DOCKERHUB_USER} -p ${DOCKERHUB_PASSWORD}
-            docker build -t  blitzshare.api:latest .
-            docker tag blitzshare.api:latest iamkimchi/blitzshare.api:latest
-            docker push iamkimchi/blitzshare.api:latest
+            docker build -t  ${PROJ_NAME}:${TAG} .
+            docker tag ${PROJ_NAME}:${TAG} iamkimchi/${PROJ_NAME}:${TAG}
+            docker push iamkimchi/${PROJ_NAME}:${TAG}
 
   deploy_job:
     working_directory: ~/repo
