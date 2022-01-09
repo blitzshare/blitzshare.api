@@ -7,20 +7,15 @@ import (
 
 var client *redis.Client
 
-func getClient(addr string) *redis.Client {
-	if client == nil {
-		client = redis.NewClient(&redis.Options{
-			Addr:     addr,
-			Password: "",
-		})
-		pong, _ := client.Ping().Result()
-		log.Infoln("getClient pong", pong)
-	}
-	return client
-}
+const (
+	P2pPeersDb         = 0
+	P2pBootstraoNodeDb = 1
+	BootstrapNode      = "BootstrapNode"
+)
 
 type Registry interface {
-	Get(otp string) (string, error)
+	GetOtp(otp string) (string, error)
+	GetNodeConfig() (string, error)
 }
 
 type RegistryIml struct {
@@ -31,7 +26,25 @@ func NewRegistry(redisUrl string) Registry {
 	return &RegistryIml{redisUrl: redisUrl}
 }
 
-func (impl *RegistryIml) Get(otp string) (string, error) {
-	client := getClient(impl.redisUrl)
+func (impl *RegistryIml) getClient(db int) *redis.Client {
+	if client == nil {
+		client = redis.NewClient(&redis.Options{
+			Addr:     impl.redisUrl,
+			Password: "",
+			DB:       db,
+		})
+		pong, _ := client.Ping().Result()
+		log.Infoln("getClient pong", pong)
+	}
+	return client
+}
+
+func (impl *RegistryIml) GetOtp(otp string) (string, error) {
+	client := impl.getClient(P2pPeersDb)
 	return client.Get(otp).Result()
+}
+
+func (impl *RegistryIml) GetNodeConfig() (string, error) {
+	client := impl.getClient(P2pBootstraoNodeDb)
+	return client.Get(BootstrapNode).Result()
 }

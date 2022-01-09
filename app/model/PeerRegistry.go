@@ -12,3 +12,13 @@ type MultiAddrResponse struct {
 type PeerRegistryAckResponse struct {
 	AckId string `binding:"required" json:"ackId"`
 }
+
+type NodeConfig struct {
+	NodeId string `json:"nodeId"`
+	Port   int    `json:"port"`
+}
+
+type NodeConfigRespone struct {
+	NodeId string `json:"nodeId"`
+	Port   int    `json:"port"`
+}
