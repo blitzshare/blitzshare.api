@@ -9,7 +9,7 @@ var client *redis.Client
 
 const (
 	P2pPeersDb         = 0
-	P2pBootstraoNodeDb = 1
+	P2pBootstrapNodeDb = 1
 	BootstrapNode      = "BootstrapNode"
 )
 
@@ -45,6 +45,6 @@ func (impl *RegistryIml) GetOtp(otp string) (string, error) {
 }
 
 func (impl *RegistryIml) GetNodeConfig() (string, error) {
-	client := impl.getClient(P2pBootstraoNodeDb)
+	client := impl.getClient(P2pBootstrapNodeDb)
 	return client.Get(BootstrapNode).Result()
 }
