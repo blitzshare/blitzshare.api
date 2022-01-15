@@ -24,4 +24,8 @@ func TestP2pRegistry(t *testing.T) {
 	fmt.Println(nodeConfig.NodeId)
 	assert.NotNil(t, nodeConfig.NodeId)
 	assert.Equal(t, nodeConfig.Port, 63785)
+	// deregister
+	deleteAck := DeletePeerRegistry(t, url, ack.Token)
+	assert.NotNil(t, deleteAck.AckId)
+	assert.True(t, len(deleteAck.AckId) > 5)
 }

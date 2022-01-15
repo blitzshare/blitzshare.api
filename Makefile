@@ -5,10 +5,9 @@ install:
 
 test:
 	go test -v ./app/... -v -count=1 -cover
-
-
+	
 acceptance-tests:
-	APP_URL=http://aafaaa43932174dbaa8bf6a164b447ff-2135424652.eu-west-2.elb.amazonaws.com/api go test -v ./test/... -v -count=1
+	APP_URL=http://0.0.0.0:8000 go test -v ./test/... -v -count=1
 
 fix-format:
 	gofmt -w -s app/  cmd/ mocks/ 

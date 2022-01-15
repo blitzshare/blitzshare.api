@@ -4,9 +4,8 @@ import (
 	"encoding/json"
 	"errors"
 	"io/ioutil"
-	"net/http/httptest"
-
 	"net/http"
+	"net/http/httptest"
 
 	"blitzshare.api/app/config"
 	"blitzshare.api/app/dependencies"
@@ -43,9 +42,13 @@ var _ = Describe("Get P2p Peer address by OTP", func() {
 					Value: "non-defined-id",
 				},
 			}
+			rndMock := &mocks.Rnd{}
+			r := "random-string"
+			rndMock.On("GenerateRandomWordSequence").Return(&r)
 			deps := dependencies.Dependencies{
 				Config:   config,
 				Registry: registry,
+				Rnd:      rndMock,
 			}
 			endpoints.GetP2pPeerHandler(&deps)(c)
 			Expect(w.Code).To(Equal(http.StatusNotFound))
@@ -54,14 +57,25 @@ var _ = Describe("Get P2p Peer address by OTP", func() {
 
 		It("expected 200 Ok for valid OTP", func() {
 			registry := &mocks.Registry{}
+			resp := model.P2pPeerRegistryResponse{
+				MultiAddr: MultiAddr,
+				Otp:       OTP,
+				Mode:      "chat",
+			}
+			bStr, err := json.Marshal(resp)
 			registry.On("GetOtp",
 				mock.MatchedBy(func(input interface{}) bool {
 					return input == OTP
-				})).Return(MultiAddr, nil)
+				})).Return(string(bStr), nil)
+			rndMock := &mocks.Rnd{}
+			r := "random-string"
+			rndMock.On("GenerateRandomWordSequence").Return(&r)
 			deps := dependencies.Dependencies{
 				Config:   config,
 				Registry: registry,
+				Rnd:      rndMock,
 			}
+
 			w := httptest.NewRecorder()
 			c, _ := gin.CreateTestContext(w)
 			c.Params = []gin.Param{

@@ -25,6 +25,7 @@ const KubemqDefaultPort = 50000
 
 type EventEmit interface {
 	EmitP2pPeerRegistryCmd(queueUrl string, clientId string, event *model.P2pPeerRegistryCmd) (string, error)
+	EmitP2pPeerDeregisterCmd(queueUrl string, clientId string, event *model.P2pPeerDeregisterCmd) (string, error)
 }
 
 type EventEmitImpl struct {
@@ -53,7 +54,20 @@ func emitEvent(queueUrl string, clientId string, event []byte, channelName strin
 }
 
 func (*EventEmitImpl) EmitP2pPeerRegistryCmd(queueUrl string, clientId string, event *model.P2pPeerRegistryCmd) (string, error) {
-	log.Infoln("EmitP2pPeerRegistryCmd")
+	log.Debugln("EmitP2pPeerRegistryCmd")
+	bEvent, err := json.Marshal(event)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	msgId, err := emitEvent(queueUrl, clientId, bEvent, ChannelName)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	return msgId, nil
+}
+
+func (*EventEmitImpl) EmitP2pPeerDeregisterCmd(queueUrl string, clientId string, event *model.P2pPeerDeregisterCmd) (string, error) {
+	log.Debugln("EmitP2pPeerDeregisterCmd")
 	bEvent, err := json.Marshal(event)
 	if err != nil {
 		log.Fatalln(err)

@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"blitzshare.api/app/dependencies"
+
 	"blitzshare.api/app/model"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
@@ -14,15 +15,25 @@ import (
 func RegisterP2pPeerHandler(deps *dependencies.Dependencies) func(c *gin.Context) {
 	return func(c *gin.Context) {
 		AddDefaultResponseHeaders(c)
-		var r model.P2pPeerRegistryCmd
-		if err := c.ShouldBindWith(&r, binding.JSON); err == nil {
-			log.Infoln("RegisterP2pPeer", r.Otp)
-			msgId, err := deps.EventEmit.EmitP2pPeerRegistryCmd(deps.Config.Settings.QueueUrl, deps.Config.ClientId, &r)
+		var req model.P2pPeerRegistryReq
+		token := *deps.Rnd.GenerateRandomWordSequence()
+		if err := c.ShouldBindWith(&req, binding.JSON); err == nil {
+			log.Debugln("RegisterP2pPeer", req.Otp)
+			e := model.P2pPeerRegistryCmd{
+				MultiAddr: req.MultiAddr,
+				Mode:      req.Mode,
+				Otp:       req.Otp,
+				Token:     token,
+			}
+			msgId, err := deps.EventEmit.EmitP2pPeerRegistryCmd(deps.Config.Settings.QueueUrl, deps.Config.ClientId, &e)
 			if err != nil {
 				c.JSON(http.StatusInternalServerError, nil)
 			} else {
-				// TODO: return de-register token - to authenticate de-registration of otp
-				c.JSON(http.StatusAccepted, gin.H{"ackId": msgId})
+				rep := model.PeerRegistryAckResponse{
+					AckId: msgId,
+					Token: token,
+				}
+				c.JSON(http.StatusAccepted, rep)
 			}
 		} else {
 			log.Errorln("RegisterP2pPeer", err.Error())

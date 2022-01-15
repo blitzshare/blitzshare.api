@@ -1,9 +1,27 @@
 package model
 
+type P2pPeerRegistryReq struct {
+	MultiAddr string `binding:"required" json:"multiAddr"`
+	Otp       string `binding:"required" json:"otp"`
+	Mode      string `binding:"required" json:"mode"`
+}
+
+type P2pPeerRegistryResponse struct {
+	MultiAddr string `binding:"required" json:"multiAddr"`
+	Otp       string `binding:"required" json:"otp"`
+	Mode      string `binding:"required" json:"mode"`
+}
+
 type P2pPeerRegistryCmd struct {
-	MultiAddr string `form:"multiAddr" binding:"required" json:"multiAddr"`
-	Otp       string `form:"otp" binding:"required" json:"otp"`
-	Mode      string `form:"otp" binding:"required" json:"mode"`
+	MultiAddr string `binding:"required" json:"multiAddr"`
+	Otp       string `binding:"required" json:"otp"`
+	Mode      string `binding:"required" json:"mode"`
+	Token     string `binding:"required" json:"token"`
+}
+
+type P2pPeerDeregisterCmd struct {
+	Otp   string `form:"otp" binding:"required" json:"otp"`
+	Token string `form:"otp" binding:"required" json:"token"`
 }
 
 type MultiAddrResponse struct {
@@ -11,6 +29,11 @@ type MultiAddrResponse struct {
 }
 
 type PeerRegistryAckResponse struct {
+	AckId string `binding:"required" json:"ackId"`
+	Token string `binding:"required" json:"token"`
+}
+
+type AckResponse struct {
 	AckId string `binding:"required" json:"ackId"`
 }
 
