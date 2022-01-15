@@ -28,7 +28,7 @@ var _ = Describe("Register P2p Endpoint", func() {
 		server := config.Server{Port: 323}
 		settings := config.Settings{RedisUrl: "redis.svc.cluster.local"}
 		emit := &mocks.EventEmit{}
-		emit.On("EmitP2pPeerRegistryCmd",
+		emit.On("EmitP2pPeerRegisterCmd",
 			mock.MatchedBy(func(input interface{}) bool {
 				return true
 			}),
