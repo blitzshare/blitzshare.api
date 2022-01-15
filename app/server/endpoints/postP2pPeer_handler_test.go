@@ -27,7 +27,6 @@ var _ = Describe("Register P2p Endpoint", func() {
 	BeforeEach(func() {
 		server := config.Server{Port: 323}
 		settings := config.Settings{RedisUrl: "redis.svc.cluster.local"}
-
 		emit := &mocks.EventEmit{}
 		emit.On("EmitP2pPeerRegistryCmd",
 			mock.MatchedBy(func(input interface{}) bool {
@@ -48,7 +47,6 @@ var _ = Describe("Register P2p Endpoint", func() {
 			Config:    config,
 			EventEmit: emit,
 		}
-
 	})
 	Context("Given a RegisterP2pHandler", func() {
 		It("expected 400 for missing OneTimePass", func() {
@@ -73,12 +71,13 @@ var _ = Describe("Register P2p Endpoint", func() {
 			Expect(w.Code).To(Equal(http.StatusBadRequest))
 			Expect(w.Header().Get("X-Blitzshare-Service")).To(Equal("blitzshare.api"))
 		})
-		It("expected 202 Accepted", func() {
+		It("expected 202 Accepted - chat mode", func() {
 			router := server.NewRouter(deps)
 			w := httptest.NewRecorder()
 			body, _ := json.Marshal(model.P2pPeerRegistryCmd{
 				MultiAddr: MultiAddr,
 				Otp:       OTP,
+				Mode:      "chat",
 			})
 			req, _ := http.NewRequest("POST", "/p2p/registry", bytes.NewReader(body))
 			router.ServeHTTP(w, req)
@@ -86,6 +85,26 @@ var _ = Describe("Register P2p Endpoint", func() {
 			b, err := ioutil.ReadAll(w.Body)
 			json.Unmarshal(b, &ack)
 			Expect(err).To(BeNil())
+			Expect(ack.AckId).To(Equal(AckId))
+			Expect(w.Code).To(Equal(http.StatusAccepted))
+			Expect(w.Header().Get("X-Blitzshare-Service")).To(Equal("blitzshare.api"))
+		})
+		It("expected 202 Accepted - file mode", func() {
+			router := server.NewRouter(deps)
+			w := httptest.NewRecorder()
+			body, _ := json.Marshal(model.P2pPeerRegistryCmd{
+				MultiAddr: MultiAddr,
+				Otp:       OTP,
+				Mode:      "file",
+			})
+			req, _ := http.NewRequest("POST", "/p2p/registry", bytes.NewReader(body))
+			router.ServeHTTP(w, req)
+			ack := model.PeerRegistryAckResponse{}
+			b, err := ioutil.ReadAll(w.Body)
+			json.Unmarshal(b, &ack)
+			Expect(err).To(BeNil())
+			// fmt.Println("@@@", string(b))
+
 			Expect(ack.AckId).To(Equal(AckId))
 			Expect(w.Code).To(Equal(http.StatusAccepted))
 			Expect(w.Header().Get("X-Blitzshare-Service")).To(Equal("blitzshare.api"))

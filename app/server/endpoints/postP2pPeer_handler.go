@@ -17,7 +17,6 @@ func RegisterP2pPeerHandler(deps *dependencies.Dependencies) func(c *gin.Context
 		var r model.P2pPeerRegistryCmd
 		if err := c.ShouldBindWith(&r, binding.JSON); err == nil {
 			log.Infoln("RegisterP2pPeer", r.Otp)
-
 			msgId, err := deps.EventEmit.EmitP2pPeerRegistryCmd(deps.Config.Settings.QueueUrl, deps.Config.ClientId, &r)
 			if err != nil {
 				c.JSON(http.StatusInternalServerError, nil)

@@ -12,13 +12,12 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-//curl -XPOST a4d8a61f98aae42179b2567972dfe9d1-1191192214.eu-west-2.elb.amazonaws.com/p2p/registry -d '{ "multiAddr": "x", "otp": "y0}'
-func PostPeerRegistry(t *testing.T) *model.PeerRegistryAckResponse {
+func PostPeerRegistry(t *testing.T, url *string) *model.PeerRegistryAckResponse {
 	body, _ := json.Marshal(model.P2pPeerRegistryCmd{
 		MultiAddr: MultiAddr,
 		Otp:       Otp,
 	})
-	serverUrl := fmt.Sprintf("%s/p2p/registry", Url)
+	serverUrl := fmt.Sprintf("%s/p2p/registry", *url)
 	resp, err := http.Post(serverUrl, "application/json", bytes.NewReader(body))
 
 	ack := model.PeerRegistryAckResponse{}
@@ -28,18 +27,19 @@ func PostPeerRegistry(t *testing.T) *model.PeerRegistryAckResponse {
 	return &ack
 }
 
-func GetPeerRegistry(t *testing.T) *model.MultiAddrResponse {
-	serverUrl := fmt.Sprintf("%s/p2p/registry/%s", Url, Otp)
+func GetPeerRegistry(t *testing.T, url *string) *model.MultiAddrResponse {
+	serverUrl := fmt.Sprintf("%s/p2p/registry/%s", *url, Otp)
 	resp, err := http.Get(serverUrl)
 	addr := model.MultiAddrResponse{}
 	b, err := ioutil.ReadAll(resp.Body)
+	fmt.Println("@@@", string(b))
 	assert.Nil(t, err)
 	json.Unmarshal(b, &addr)
 	return &addr
 }
 
-func GetBootstrapNode(t *testing.T) *model.NodeConfigRespone {
-	serverUrl := fmt.Sprintf("%s/p2p/bootstrap-node", Url)
+func GetBootstrapNode(t *testing.T, url *string) *model.NodeConfigRespone {
+	serverUrl := fmt.Sprintf("%s/p2p/bootstrap-node", *url)
 	resp, err := http.Get(serverUrl)
 	addr := model.NodeConfigRespone{}
 	b, err := ioutil.ReadAll(resp.Body)

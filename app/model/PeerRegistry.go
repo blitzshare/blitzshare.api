@@ -3,6 +3,7 @@ package model
 type P2pPeerRegistryCmd struct {
 	MultiAddr string `form:"multiAddr" binding:"required" json:"multiAddr"`
 	Otp       string `form:"otp" binding:"required" json:"otp"`
+	Mode      string `form:"otp" binding:"required" json:"mode"`
 }
 
 type MultiAddrResponse struct {
