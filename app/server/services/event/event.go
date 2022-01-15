@@ -18,7 +18,8 @@ func NewNodeJoinedEvent(nodeId string) *NodeJoinedEvent {
 }
 
 const (
-	ChannelName = "p2p-peer-registry-cmd"
+	PeerRegisterCmd   = "p2p-peer-register-cmd"
+	PeerDeregisterCmd = "p2p-peer-deregister-cmd"
 )
 
 const KubemqDefaultPort = 50000
@@ -59,7 +60,7 @@ func (*EventEmitImpl) EmitP2pPeerRegistryCmd(queueUrl string, clientId string, e
 	if err != nil {
 		log.Fatalln(err)
 	}
-	msgId, err := emitEvent(queueUrl, clientId, bEvent, ChannelName)
+	msgId, err := emitEvent(queueUrl, clientId, bEvent, PeerDeregisterCmd)
 	if err != nil {
 		log.Fatalln(err)
 	}
