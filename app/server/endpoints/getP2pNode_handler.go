@@ -22,7 +22,7 @@ func parseNodeConfig(config string) (*model.NodeConfig, error) {
 func GetP2pBootstrapNode(deps *dependencies.Dependencies) func(c *gin.Context) {
 	return func(c *gin.Context) {
 		AddDefaultResponseHeaders(c)
-		log.Infoln("GetP2pBootstrapNode")
+		log.Debugln("GetP2pBootstrapNode")
 		config, err := deps.Registry.GetNodeConfig()
 		if err != nil || config == "" {
 			c.JSON(http.StatusNotFound, "")
@@ -30,6 +30,7 @@ func GetP2pBootstrapNode(deps *dependencies.Dependencies) func(c *gin.Context) {
 		} else {
 			nodeConfig, parseErr := parseNodeConfig(config)
 			if parseErr == nil {
+				log.Debugln("GetP2pBootstrapNode", nodeConfig)
 				c.JSON(http.StatusOK, nodeConfig)
 			} else {
 				log.Errorln("GetP2pPeerHandler", parseErr.Error())

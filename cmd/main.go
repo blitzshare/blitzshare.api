@@ -15,6 +15,7 @@ import (
 func initLog() {
 	log.SetFormatter(&log.JSONFormatter{})
 	log.SetOutput(os.Stdout)
+	log.SetLevel(log.DebugLevel)
 }
 
 func main() {
