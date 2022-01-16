@@ -20,8 +20,8 @@ type P2pPeerRegistryCmd struct {
 }
 
 type P2pPeerDeregisterCmd struct {
-	Otp   string `form:"otp" binding:"required" json:"otp"`
-	Token string `form:"otp" binding:"required" json:"token"`
+	Otp   string `binding:"required" json:"otp"`
+	Token string `binding:"required" json:"token"`
 }
 
 type MultiAddrResponse struct {
