@@ -28,7 +28,8 @@ k8s-apply:
 	kubectl apply -f k8s/namespace.yaml
 	kubectl apply -f k8s//deployment.yaml
 	kubectl apply -f k8s/service.yaml
-	kubectl rollout restart deployment blitzshare-api-deployment --namespace blitzshare-ns
+	kubectl apply -f k8s/hpa.yaml
+	kubectl rollout restart deployment blitzshare-api-dpl --namespace blitzshare-ns
 
 k8s-destroy:
 	kubectl delete namespace blitzshare-ns

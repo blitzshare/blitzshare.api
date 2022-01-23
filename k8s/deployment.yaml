@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   namespace: blitzshare-ns
-  name: blitzshare-api-deployment
+  name: blitzshare-api-dpl
   labels:
     app: blitzshare-api
 spec:
