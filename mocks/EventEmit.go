@@ -13,14 +13,16 @@ type EventEmit struct {
 }
 
 // EmitP2pPeerDeregisterCmd provides a mock function with given fields: queueUrl, clientId, _a2
-func (_m *EventEmit) EmitP2pPeerDeregisterCmd(queueUrl string, clientId string, _a2 *model.P2pPeerDeregisterCmd) (string, error) {
+func (_m *EventEmit) EmitP2pPeerDeregisterCmd(queueUrl string, clientId string, _a2 *model.P2pPeerDeregisterCmd) (*string, error) {
 	ret := _m.Called(queueUrl, clientId, _a2)
 
-	var r0 string
-	if rf, ok := ret.Get(0).(func(string, string, *model.P2pPeerDeregisterCmd) string); ok {
+	var r0 *string
+	if rf, ok := ret.Get(0).(func(string, string, *model.P2pPeerDeregisterCmd) *string); ok {
 		r0 = rf(queueUrl, clientId, _a2)
 	} else {
-		r0 = ret.Get(0).(string)
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*string)
+		}
 	}
 
 	var r1 error
@@ -34,14 +36,16 @@ func (_m *EventEmit) EmitP2pPeerDeregisterCmd(queueUrl string, clientId string, 
 }
 
 // EmitP2pPeerRegisterCmd provides a mock function with given fields: queueUrl, clientId, _a2
-func (_m *EventEmit) EmitP2pPeerRegisterCmd(queueUrl string, clientId string, _a2 *model.P2pPeerRegistryCmd) (string, error) {
+func (_m *EventEmit) EmitP2pPeerRegisterCmd(queueUrl string, clientId string, _a2 *model.P2pPeerRegistryCmd) (*string, error) {
 	ret := _m.Called(queueUrl, clientId, _a2)
 
-	var r0 string
-	if rf, ok := ret.Get(0).(func(string, string, *model.P2pPeerRegistryCmd) string); ok {
+	var r0 *string
+	if rf, ok := ret.Get(0).(func(string, string, *model.P2pPeerRegistryCmd) *string); ok {
 		r0 = rf(queueUrl, clientId, _a2)
 	} else {
-		r0 = ret.Get(0).(string)
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*string)
+		}
 	}
 
 	var r1 error

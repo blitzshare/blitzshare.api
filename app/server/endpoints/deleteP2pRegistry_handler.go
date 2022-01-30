@@ -15,13 +15,18 @@ func DeleteP2pPeerHandler(deps *dependencies.Dependencies) func(c *gin.Context) 
 		token := c.Params.ByName("token")
 		otp := c.Params.ByName("otp")
 		log.Debugln("GetP2pPeerHandler", token)
+		if len(otp) < 10 || len(token) < 10 {
+			c.JSON(http.StatusBadRequest, nil)
+			return
+		}
+
 		e := &model.P2pPeerDeregisterCmd{
 			Otp:   otp,
 			Token: token,
 		}
-		log.Println(e)
+
 		msgId, err := deps.EventEmit.EmitP2pPeerDeregisterCmd(deps.Config.Settings.QueueUrl, deps.Config.ClientId, e)
-		if err != nil {
+		if msgId != nil || err != nil {
 			c.JSON(http.StatusInternalServerError, nil)
 		} else {
 			c.JSON(http.StatusAccepted, gin.H{"ackId": msgId})

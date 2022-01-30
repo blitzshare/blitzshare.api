@@ -13,13 +13,14 @@ import (
 func parsePeerConfig(config string) (*model.P2pPeerRegistryResponse, error) {
 	var conf model.P2pPeerRegistryResponse
 	err := json.Unmarshal([]byte(config), &conf)
-	log.Infoln("GetP2pPeerHandler", config)
+	log.Debugln("GetP2pPeerHandler", config)
 	if err != nil {
 		log.Errorln("GetP2pPeerHandler", err.Error())
 	}
 	return &conf, err
 }
-func GetP2pPeerHandler(deps *dependencies.Dependencies) func(c *gin.Context) {
+
+func GetP2pRegistryHandler(deps *dependencies.Dependencies) func(c *gin.Context) {
 	return func(c *gin.Context) {
 		AddDefaultResponseHeaders(c)
 		otp := c.Params.ByName("otp")

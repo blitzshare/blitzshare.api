@@ -109,6 +109,6 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.Step(`^User registers via OTP$`, postPeerRegistry)
 	ctx.Step(`^Another User obtains registred user information via OTP$`, getPeerInfoViaOTP)
 	ctx.Step(`^User get bootstrap node config$`, getBootstrapNodeConfig)
-	ctx.Step(`^Connection between useres can be etablished$`, validateTestContext)
+	ctx.Step(`^Connection between users can be etablished$`, validateTestContext)
 	ctx.Step(`^User can deregister OTP via obtained Token$`, deleteUserRegistration)
 }

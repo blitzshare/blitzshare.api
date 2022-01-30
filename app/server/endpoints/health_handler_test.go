@@ -5,19 +5,20 @@ import (
 	"net/http/httptest"
 
 	"blitzshare.api/app/server/endpoints"
+	"blitzshare.api/test"
 	"github.com/gin-gonic/gin"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 )
 
-var _ = Describe("Register P2p Endpoint", func() {
-	Context("Given a RegisterP2pHandler", func() {
+var _ = Describe("Health check test", func() {
+	Context("Given a healthcheck", func() {
 		It("expected 200 OK", func() {
-			w := httptest.NewRecorder()
-			c, _ := gin.CreateTestContext(w)
+			rec := httptest.NewRecorder()
+			c, _ := gin.CreateTestContext(rec)
 			endpoints.HealthHandler()(c)
-			Expect(w.Code).To(Equal(http.StatusOK))
-			Expect(w.Header().Get("X-Blitzshare-Service")).To(Equal("blitzshare.api"))
+			Expect(rec.Code).To(Equal(http.StatusOK))
+			test.AsserBlitzshareHeaders(rec)
 		})
 	})
 })

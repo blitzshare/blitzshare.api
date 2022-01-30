@@ -23,10 +23,10 @@ func NewRouter(deps *dependencies.Dependencies) *gin.Engine {
 
 	router.GET("/test", endpoints.HealthHandler())
 	// p2p/registy
-	router.POST("/p2p/registry", endpoints.RegisterP2pPeerHandler(deps))
-	router.GET("/p2p/registry/:otp", endpoints.GetP2pPeerHandler(deps))
+	router.POST("/p2p/registry", endpoints.PostP2pRegistryHandler(deps))
+	router.GET("/p2p/registry/:otp", endpoints.GetP2pRegistryHandler(deps))
 	router.DELETE("/p2p/registry/:otp/:token", endpoints.DeleteP2pPeerHandler(deps))
 	// p2p/boostrap-node
-	router.GET("/p2p/bootstrap-node", endpoints.GetP2pBootstrapNode(deps))
+	router.GET("/p2p/bootstrap-node", endpoints.GetP2pBootstrapNodeHandler(deps))
 	return router
 }
