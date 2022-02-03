@@ -12,7 +12,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func RegisterP2pPeerHandler(deps *dependencies.Dependencies) func(c *gin.Context) {
+func PostP2pRegistryHandler(deps *dependencies.Dependencies) func(c *gin.Context) {
 	return func(c *gin.Context) {
 		AddDefaultResponseHeaders(c)
 		var req model.P2pPeerRegistryReq
@@ -30,7 +30,7 @@ func RegisterP2pPeerHandler(deps *dependencies.Dependencies) func(c *gin.Context
 				c.JSON(http.StatusInternalServerError, nil)
 			} else {
 				rep := model.PeerRegistryAckResponse{
-					AckId: msgId,
+					AckId: *msgId,
 					Token: token,
 				}
 				c.JSON(http.StatusAccepted, rep)

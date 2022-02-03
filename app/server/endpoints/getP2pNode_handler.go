@@ -19,7 +19,7 @@ func parseNodeConfig(config string) (*model.NodeConfig, error) {
 	return &nodeConfig, err
 }
 
-func GetP2pBootstrapNode(deps *dependencies.Dependencies) func(c *gin.Context) {
+func GetP2pBootstrapNodeHandler(deps *dependencies.Dependencies) func(c *gin.Context) {
 	return func(c *gin.Context) {
 		AddDefaultResponseHeaders(c)
 		log.Debugln("GetP2pBootstrapNode")
