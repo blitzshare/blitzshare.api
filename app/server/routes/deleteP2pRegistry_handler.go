@@ -18,7 +18,7 @@ import (
 // @Success 201 {object} model.AckResponse "deregistration request accepted"
 // @Success 404 "otp not found"
 // @Success 500 "internal server error"
-// @Router   /p2p/registry/{token}/{otp} [delete]
+// @Router   /p2p/registry/{otp}/{token} [delete]
 func DeleteP2pPeerHandler(deps *dependencies.Dependencies) func(c *gin.Context) {
 	return func(c *gin.Context) {
 		AddDefaultResponseHeaders(c)
@@ -31,12 +31,16 @@ func DeleteP2pPeerHandler(deps *dependencies.Dependencies) func(c *gin.Context) 
 		}
 
 		e := &model.P2pPeerDeregisterCmd{
-			Otp:   otp,
-			Token: token,
+			Otp: model.Otp{
+				Otp: otp,
+			},
+			Token: model.Token{
+				Token: token,
+			},
 		}
 
 		msgId, err := deps.EventEmit.EmitP2pPeerDeregisterCmd(deps.Config.Settings.QueueUrl, deps.Config.ClientId, e)
-		if msgId != nil || err != nil {
+		if msgId == nil || err != nil {
 			c.JSON(http.StatusInternalServerError, nil)
 		} else {
 			c.JSON(http.StatusAccepted, model.AckResponse{AckId: *msgId})

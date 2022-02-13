@@ -53,7 +53,9 @@ var _ = Describe("POST /p2p/registry", func() {
 			router := routes.NewRouter(deps)
 			rec := httptest.NewRecorder()
 			body, _ := json.Marshal(model.P2pPeerRegistryReq{
-				MultiAddr: MultiAddr,
+				MultiAddr: model.MultiAddr{
+					MultiAddr: MultiAddr,
+				},
 			})
 			req, _ := http.NewRequest("POST", "/p2p/registry", bytes.NewReader(body))
 			router.ServeHTTP(rec, req)
@@ -64,7 +66,9 @@ var _ = Describe("POST /p2p/registry", func() {
 			router := routes.NewRouter(deps)
 			rec := httptest.NewRecorder()
 			body, _ := json.Marshal(model.P2pPeerRegistryReq{
-				Otp: OTP,
+				Otp: model.Otp{
+					Otp: OTP,
+				},
 			})
 			req, _ := http.NewRequest("POST", "/p2p/registry", bytes.NewReader(body))
 			router.ServeHTTP(rec, req)
@@ -75,9 +79,13 @@ var _ = Describe("POST /p2p/registry", func() {
 			router := routes.NewRouter(deps)
 			rec := httptest.NewRecorder()
 			body, _ := json.Marshal(model.P2pPeerRegistryReq{
-				MultiAddr: MultiAddr,
-				Otp:       OTP,
-				Mode:      "chat",
+				MultiAddr: model.MultiAddr{
+					MultiAddr: MultiAddr,
+				},
+				Otp: model.Otp{
+					Otp: OTP,
+				},
+				Mode: "chat",
 			})
 			req, _ := http.NewRequest("POST", "/p2p/registry", bytes.NewReader(body))
 			router.ServeHTTP(rec, req)
@@ -93,9 +101,13 @@ var _ = Describe("POST /p2p/registry", func() {
 			router := routes.NewRouter(deps)
 			rec := httptest.NewRecorder()
 			body, _ := json.Marshal(model.P2pPeerRegistryReq{
-				MultiAddr: MultiAddr,
-				Otp:       OTP,
-				Mode:      "file",
+				MultiAddr: model.MultiAddr{
+					MultiAddr: MultiAddr,
+				},
+				Otp: model.Otp{
+					Otp: OTP,
+				},
+				Mode: "file",
 			})
 			req, _ := http.NewRequest("POST", "/p2p/registry", bytes.NewReader(body))
 			router.ServeHTTP(rec, req)

@@ -17,7 +17,7 @@ import (
 // @Schemes
 // @Tags    p2p-registry
 // @Param   config body     model.P2pPeerRegistryReq  true  "p2p registry config"
-// @Success 202 {object} model.PeerRegistryAckResponse "acknowledge response with de-registration token"
+// @Success 202 {object} model.PeerResgistryAckResponse "acknowledge response with de-registration token"
 // @Success 500 "failed to register peer"
 // @Success 400 "invalid params"
 // @Router   /p2p/registry [post]
@@ -30,17 +30,25 @@ func PostP2pRegistryHandler(deps *dependencies.Dependencies) func(c *gin.Context
 			log.Debugln("RegisterP2pPeer", req.Otp)
 			e := model.P2pPeerRegistryCmd{
 				MultiAddr: req.MultiAddr,
-				Mode:      req.Mode,
-				Otp:       req.Otp,
-				Token:     token,
+				Mode: model.Mode{
+					Mode: req.Mode,
+				},
+				Otp: req.Otp,
+				Token: model.Token{
+					Token: token,
+				},
 			}
 			msgId, err := deps.EventEmit.EmitP2pPeerRegisterCmd(deps.Config.Settings.QueueUrl, deps.Config.ClientId, &e)
 			if err != nil {
 				c.JSON(http.StatusInternalServerError, nil)
 			} else {
 				rep := model.PeerRegistryAckResponse{
-					AckId: *msgId,
-					Token: token,
+					AckResponse: model.AckResponse{
+						AckId: *msgId,
+					},
+					Token: model.Token{
+						Token: token,
+					},
 				}
 				c.JSON(http.StatusAccepted, rep)
 			}

@@ -1,36 +1,50 @@
 package model
 
-type P2pPeerRegistryReq struct {
+type MultiAddr struct {
 	MultiAddr string `binding:"required" json:"multiAddr" example:"/ip4/10.101.18.26/tcp/63785/p2p/12D3KooWPGR"`
-	Otp       string `binding:"required" json:"otp"  example:"gelandelaufer-astromancer-scurvyweed-sayability"`
-	Mode      string `binding:"required" json:"mode" example:"chat"`
+}
+type Otp struct {
+	Otp string `binding:"required" json:"otp"  example:"gelandelaufer-astromancer-scurvyweed-sayability"`
+}
+
+type Mode struct {
+	Mode string `binding:"required" json:"mode" example:"file"`
+}
+
+type Token struct {
+	Token string `binding:"required" json:"token" example:"sdfklsfSDFKSDFmxcvlsdfsdfdfSDFkSDFsdf"`
+}
+type P2pPeerRegistryReq struct {
+	MultiAddr
+	Otp
+	Mode string `binding:"required" json:"mode" example:"chat"`
 }
 
 type P2pPeerRegistryResponse struct {
-	MultiAddr string `binding:"required" json:"multiAddr" example:"/ip4/10.101.18.26/tcp/63785/p2p/12D3KooWPGR"`
-	Otp       string `binding:"required" json:"otp" example:"gelandelaufer-astromancer-scurvyweed-sayability"`
-	Mode      string `binding:"required" json:"mode" example:"file"`
+	MultiAddr
+	Otp
+	Mode
 }
 
 type P2pPeerRegistryCmd struct {
-	MultiAddr string `binding:"required" json:"multiAddr" example:"/ip4/10.101.18.26/tcp/63785/p2p/12D3KooWPGR"`
-	Otp       string `binding:"required" json:"otp" example:"gelandelaufer-astromancer-scurvyweed-sayability"`
-	Mode      string `binding:"required" json:"mode" example:"file"`
-	Token     string `binding:"required" json:"token" example:"sdfklsfSDFKSDFmxcvlsdfsdfdfSDFkSDFsdf"`
+	MultiAddr
+	Otp
+	Mode
+	Token
 }
 
 type P2pPeerDeregisterCmd struct {
-	Otp   string `binding:"required" json:"otp" example:"gelandelaufer-astromancer-scurvyweed-sayability"`
-	Token string `binding:"required" json:"token" example:"sdfklsfSDFKSDFmxcvlsdfsdfdfSDFkSDFsdf"`
+	Otp
+	Token
 }
 
 type MultiAddrResponse struct {
-	MultiAddr string `binding:"required" json:"multiAddr" example:"/ip4/10.101.18.26/tcp/63785/p2p/12D3KooWPGR"`
+	MultiAddr
 }
 
 type PeerRegistryAckResponse struct {
-	AckId string `binding:"required" json:"ackId" example:"12D3KooWQcWw5RGtDqCq43M3t1t43k1CBJ8XPdrU5Bc1KtLnTYK"`
-	Token string `binding:"required" json:"token" example:"sdfklsfSDFKSDFmxcvlsdfsdfdfSDFkSDFsdf"`
+	AckResponse
+	Token
 }
 
 type AckResponse struct {
@@ -43,6 +57,5 @@ type NodeConfig struct {
 }
 
 type NodeConfigRespone struct {
-	NodeId string `json:"nodeId" example:"234DSFG345dsfgdfghdfgdfgDFGASR4"`
-	Port   int    `json:"port" example:"6789"`
+	NodeConfig
 }

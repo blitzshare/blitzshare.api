@@ -58,9 +58,15 @@ var _ = Describe("GET /p2p/registry/:otp", func() {
 		It("expected 200 Ok for valid OTP", func() {
 			registry := &mocks.Registry{}
 			resp := model.P2pPeerRegistryResponse{
-				MultiAddr: MultiAddr,
-				Otp:       OTP,
-				Mode:      "chat",
+				MultiAddr: model.MultiAddr{
+					MultiAddr: MultiAddr,
+				},
+				Otp: model.Otp{
+					Otp: OTP,
+				},
+				Mode: model.Mode{
+					Mode: "chat",
+				},
 			}
 			bStr, err := json.Marshal(resp)
 			registry.On("GetOtp",
@@ -88,10 +94,11 @@ var _ = Describe("GET /p2p/registry/:otp", func() {
 
 			body, _ := ioutil.ReadAll(rec.Body)
 			peerInfo := model.MultiAddrResponse{}
+
 			err = json.Unmarshal(body, &peerInfo)
 			Expect(rec.Code).To(Equal(http.StatusOK))
 			Expect(err).To(BeNil())
-			Expect(peerInfo.MultiAddr).To(Equal(MultiAddr))
+			Expect(peerInfo.MultiAddr.MultiAddr).To(Equal(MultiAddr))
 			test.AsserBlitzshareHeaders(rec)
 		})
 	})

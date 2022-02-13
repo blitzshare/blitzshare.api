@@ -1,9 +1,12 @@
 package routes_test
 
 import (
+	"blitzshare.api/app/server/model"
 	"blitzshare.api/app/server/routes"
+	"encoding/json"
 	"errors"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 
@@ -20,17 +23,19 @@ var _ = Describe("DELETE P2p Registry", func() {
 	const (
 		OTP             = "gelandelaufer-astromancer-scurvyweed-sayability"
 		DeregisterToken = "sdfklsfSDFKSDFmxcvlsdfsdfdfSDFkSDFsdf"
+		AckId           = "fkjldsfkksFSDFODSKFSJFsdfksdfldskSDFK"
 	)
 	var deps *dependencies.Dependencies
 	BeforeEach(func() {
-		AckId := "fkjldsfkksFSDFODSKFSJFsdfksdfldskSDFK"
+
 		settings := config.Settings{RedisUrl: "redis.svc.cluster.local"}
 		emit := &mocks.EventEmit{}
+		ack := AckId
 		emit.On("EmitP2pPeerDeregisterCmd",
 			mock.MatchedBy(test.MatchAny),
 			mock.MatchedBy(test.MatchAny),
 			mock.MatchedBy(test.MatchAny),
-		).Return(&AckId, nil)
+		).Return(&ack, nil)
 		config := config.Config{
 			Server:   config.Server{Port: 323},
 			Settings: settings,
@@ -45,8 +50,13 @@ var _ = Describe("DELETE P2p Registry", func() {
 		It("expected 202 for valid otp and deregister token", func() {
 			router := routes.NewRouter(deps)
 			rec := httptest.NewRecorder()
-			req, _ := http.NewRequest("DELETE", fmt.Sprintf("/p2p/registry/%s/%s", OTP, DeregisterToken), nil)
+			url := fmt.Sprintf("/p2p/registry/%s/%s", OTP, DeregisterToken)
+			req, _ := http.NewRequest("DELETE", url, nil)
 			router.ServeHTTP(rec, req)
+			var response model.AckResponse
+			body, _ := ioutil.ReadAll(rec.Body)
+			json.Unmarshal(body, &response)
+			Expect(response.AckId).To(Equal(AckId))
 			Expect(rec.Code).To(Equal(http.StatusAccepted))
 			test.AsserBlitzshareHeaders(rec)
 		})
