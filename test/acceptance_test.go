@@ -1,6 +1,7 @@
 package test
 
 import (
+	"blitzshare.api/app/server/model"
 	"bytes"
 	"context"
 	"encoding/json"
@@ -11,7 +12,6 @@ import (
 	"net/http"
 	"os"
 
-	"blitzshare.api/app/model"
 	"github.com/cucumber/godog"
 	_ "github.com/lib/pq"
 )
