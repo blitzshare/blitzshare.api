@@ -6,8 +6,42 @@
 # blitzshare.api
 Main public api responsible for Blitzshare business logic.
 
-## Links
-[Dockerhub](https://hub.docker.com/repository/docker/iamkimchi/blitzshare.api)
+
+## Getting started
+
+```bash
+# install dependencies
+$ make install
+# start local server
+$ make start
+```
+
+## Tests
+```bash
+# unit tests
+$ make test
+# acceptance tests
+$ make acceptance-tests
+# re/build mocks
+$ make build-mocks
+# generate test coverage report
+$ make coverage-report-html
+
+```
+
+## Api doc generation
+```bash
+$ make swag-gen
+# observe docs directory with generated docs
+```
+
+## K8s resources
+```bash
+# apply k8s resources
+$ make k8s-apply
+# destroy k8s resources
+$ make k8s-destroy
+```
 
 ## Tools
 [kubemqctl](https://docs.kubemq.io/getting-started/quick-start)
