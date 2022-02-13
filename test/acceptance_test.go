@@ -40,9 +40,13 @@ func assertHealthCheckResponseStatusIsOk(ctx context.Context) error {
 }
 func postPeerRegistry(ctx context.Context) context.Context {
 	body, _ := json.Marshal(model.P2pPeerRegistryReq{
-		MultiAddr: MultiAddr,
-		Otp:       Otp,
-		Mode:      "chat",
+		MultiAddr: model.MultiAddr{
+			MultiAddr: MultiAddr,
+		},
+		Otp: model.Otp{
+			Otp: Otp,
+		},
+		Mode: "chat",
 	})
 	serverUrl := fmt.Sprintf("%s/p2p/registry", baseUrl)
 	resp, _ := http.Post(serverUrl, "application/json", bytes.NewReader(body))
@@ -70,18 +74,18 @@ func getBootstrapNodeConfig(ctx context.Context) context.Context {
 }
 func validateTestContext(ctx context.Context) error {
 	nodeConfig := ctx.Value(model.NodeConfigRespone{}).(model.NodeConfigRespone)
-	// fmt.Println("nodeConfig", nodeConfig)
+	//fmt.Println("nodeConfig", nodeConfig)
 	if nodeConfig.NodeId == "" || nodeConfig.Port == 0 {
 		return errors.New("invalid node config")
 	}
 	otpRegistry := ctx.Value(model.P2pPeerRegistryResponse{}).(model.P2pPeerRegistryResponse)
 	// fmt.Println("otpRegistry", otpRegistry)
-	if otpRegistry.MultiAddr == "" || otpRegistry.Mode == "" || otpRegistry.Otp == "" {
+	if otpRegistry.MultiAddr.MultiAddr == "" || otpRegistry.Mode.Mode == "" || otpRegistry.Otp.Otp == "" {
 		return errors.New("invalid otpRegistry")
 	}
 	registry := ctx.Value(model.PeerRegistryAckResponse{}).(model.PeerRegistryAckResponse)
 	// fmt.Println("registry", registry)
-	if registry.AckId == "" || otpRegistry.Otp == "" {
+	if registry.AckId == "" || otpRegistry.Otp.Otp == "" {
 		return errors.New("invalid registry")
 	}
 	return nil
