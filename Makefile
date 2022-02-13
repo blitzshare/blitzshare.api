@@ -1,11 +1,11 @@
 SHELL := /bin/bash
 CWD := $(shell cd -P -- '$(shell dirname -- "$0")' && pwd -P)
+
 export GO111MODULE := on
 export GOBIN := $(CWD)/.bin
 
 install:
-	go install github.com/cucumber/godog/cmd/godog@v0.12.0
-	go get -d github.com/vektra/mockery/v2/.../
+	go install $(shell go list -f '{{join .Imports " "}}' tools.go)
 	go mod vendor
 start:
 	go run cmd/main.go
@@ -30,3 +30,5 @@ k8s-destroy:
 	kubectl delete deployment blitzshare-api-dpl
 build-mocks:
 	.bin/mockery --all --dir "./app/"
+swag-gen:
+	.bin/swag init --dir app/server --generalInfo routes/init.go -o docs

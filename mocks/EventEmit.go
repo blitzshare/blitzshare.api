@@ -3,7 +3,7 @@
 package mocks
 
 import (
-	model "blitzshare.api/app/model"
+	"blitzshare.api/app/server/model"
 	mock "github.com/stretchr/testify/mock"
 )
 

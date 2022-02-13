@@ -37,9 +37,14 @@ jobs:
           paths:
             - "/go/pkg/mod"
       - run:
+          name: API doc gen
+          command:  make swag-gen
+      - store_artifacts:
+          path: ./docs/swagger.yaml
+          destination: swagger.yaml
+      - run:
           name: Run test
-          command: |
-            make test
+          command: make test
       - store_test_results:
           path: /tmp/test-reports
 

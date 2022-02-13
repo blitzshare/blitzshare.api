@@ -1,10 +1,10 @@
 package event
 
 import (
+	"blitzshare.api/app/server/model"
 	"context"
 	"encoding/json"
 
-	"blitzshare.api/app/model"
 	"github.com/kubemq-io/kubemq-go"
 	log "github.com/sirupsen/logrus"
 )
