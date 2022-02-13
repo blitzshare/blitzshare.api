@@ -26,6 +26,8 @@ spec:
               value: "8000"
             - name: REDIS_URL
               value: "redis-svc.blitzshare-ns.svc.cluster.local:6379"
+            - name: KEYSTORE_POSTGRESQL_URL
+              value: "blitzshare-keystore-db-svc.blitzshare-ns.svc.cluster.local:5432"
             - name: QUEUE_URL
               value: kubemq-cluster-grpc.kubemq.svc.cluster.local
           livenessProbe:
