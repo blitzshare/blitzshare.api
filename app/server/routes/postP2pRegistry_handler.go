@@ -17,7 +17,7 @@ import (
 // @Schemes
 // @Tags    p2p-registry
 // @Param   config body     model.P2pPeerRegistryReq  true  "p2p registry config"
-// @Success 202 {object} model.PeerResgistryAckResponse "acknowledge response with de-registration token"
+// @Success 202 {object} model.PeerRegistryAckResponse "acknowledge response with de-registration token"
 // @Success 500 "failed to register peer"
 // @Success 400 "invalid params"
 // @Router   /p2p/registry [post]
