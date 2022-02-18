@@ -107,6 +107,7 @@ workflows:
             branches:
               only:
                 - main
+                - chore/api-key-auth
       # - deploy_job:
       #     context: eu-west-1
       #     requires:

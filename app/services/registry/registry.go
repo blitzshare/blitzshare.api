@@ -22,7 +22,7 @@ type RegistryIml struct {
 	redisUrl string
 }
 
-func NewRegistry(redisUrl string) Registry {
+func New(redisUrl string) Registry {
 	return &RegistryIml{redisUrl: redisUrl}
 }
 

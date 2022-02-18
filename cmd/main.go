@@ -1,6 +1,7 @@
 package main
 
 import (
+	"blitzshare.api/app"
 	"blitzshare.api/app/routes"
 	"os"
 	"os/signal"
@@ -34,7 +35,7 @@ func main() {
 
 	wg := &sync.WaitGroup{}
 
-	httpServer := server.Start(router, deps, wg)
+	httpServer := app.Start(router, deps, wg)
 	log.Printf("server running on port %d", cfg.Server.Port)
 	<-signals
 

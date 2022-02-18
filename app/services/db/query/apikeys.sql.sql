@@ -1,3 +1,3 @@
 
--- name: GetApiKeysByPartner :many
-SELECT * FROM "api_keys" WHERE "id" = $1;
+-- name: GetApiKey :one
+SELECT * FROM "api_keys" WHERE api_key = $1;

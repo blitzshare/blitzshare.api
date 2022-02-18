@@ -1,7 +1,7 @@
 package routes
 
 import (
-	"blitzshare.api/app/server/model"
+	"blitzshare.api/app/model"
 	"net/http"
 
 	"blitzshare.api/app/dependencies"

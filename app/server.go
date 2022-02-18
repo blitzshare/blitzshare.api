@@ -1,14 +1,14 @@
 package app
 
 import (
+	"blitzshare.api/app/dependencies"
 	"context"
 	"fmt"
+	_ "github.com/lib/pq"
 	"log"
 	"net/http"
 	"sync"
 	"time"
-
-	"blitzshare.api/app/dependencies"
 )
 
 type Server struct {

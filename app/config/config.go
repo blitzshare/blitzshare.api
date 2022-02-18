@@ -13,12 +13,10 @@ type Server struct {
 }
 
 type Settings struct {
-	Environment       string `envconfig:"ENV" default:"local"`
-	S3BucketName      string `envconfig:"S3_BUCKET_NAME"`
-	S3BucketUploadKey string `envconfig:"S3_BUCKET_UPLOAD_KEY"`
-	S3BucketRegion    string `envconfig:"S3_BUCKET_REGION"`
-	RedisUrl          string `envconfig:"REDIS_URL" default:"redis.svc.cluster.local:6379"`
-	QueueUrl          string `envconfig:"QUEUE_URL"`
+	Environment          string `envconfig:"ENV" default:"local"`
+	RedisUrl             string `envconfig:"REDIS_URL" default:"redis.svc.cluster.local:6379"`
+	QueueUrl             string `envconfig:"QUEUE_URL"`
+	KeyStoreDbConnection string `envconfig:"KEYSTORE_DB_CONNECTION"`
 }
 
 func Load() (Config, error) {
