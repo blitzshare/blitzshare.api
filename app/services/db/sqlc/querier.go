@@ -8,6 +8,7 @@ import (
 
 type Querier interface {
 	GetApiKey(ctx context.Context, apiKey string) (ApiKey, error)
+	GetApiKeys(ctx context.Context) ([]ApiKey, error)
 }
 
 var _ Querier = (*Queries)(nil)

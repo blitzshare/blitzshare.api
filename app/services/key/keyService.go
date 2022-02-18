@@ -24,11 +24,19 @@ func New(config config.Config) ApiKeychain {
 
 func (iml *ApiKeyIml) IsValid(apiKey *string) bool {
 	ctx := context.Background()
-	result, err := sql.Open("postgres", iml.DbConnection)
-	if err != nil {
+	log.Debugln("Connecting to database", iml.DbConnection)
+	con, err := sql.Open("postgres", iml.DbConnection)
+	if err != nil || con.Ping() != nil {
 		log.Fatalln("failed connecting to db")
 	}
-	q := db.New(result)
+	q := db.New(con)
+	allKeys, err := q.GetApiKeys(ctx)
+	log.Debugln("allKeys", len(allKeys), allKeys, err)
 	dbApiKey, err := q.GetApiKey(ctx, *apiKey)
+	if err != nil {
+		log.Fatalln("failed get key", *apiKey)
+	}
+	log.Debugln("dbApiKey", dbApiKey)
+
 	return dbApiKey.Enabled
 }

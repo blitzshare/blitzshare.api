@@ -22,3 +22,35 @@ func (q *Queries) GetApiKey(ctx context.Context, apiKey string) (ApiKey, error) 
 	)
 	return i, err
 }
+
+const getApiKeys = `-- name: GetApiKeys :many
+SELECT id, created_at, api_key, enabled FROM "api_keys"
+`
+
+func (q *Queries) GetApiKeys(ctx context.Context) ([]ApiKey, error) {
+	rows, err := q.db.QueryContext(ctx, getApiKeys)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []ApiKey{}
+	for rows.Next() {
+		var i ApiKey
+		if err := rows.Scan(
+			&i.ID,
+			&i.CreatedAt,
+			&i.ApiKey,
+			&i.Enabled,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}

@@ -31,8 +31,8 @@ func parseNodeConfig(config string) (*model.NodeConfig, error) {
 func GetBootstrapNodeHandler(deps *dependencies.Dependencies) func(c *gin.Context) {
 	return func(c *gin.Context) {
 		AddDefaultResponseHeaders(c)
-		log.Debugln("GetP2pBootstrapNode")
 		key := GetApiKeyHeader(c)
+		log.Debugln("GetP2pBootstrapNode", *key)
 		if deps.ApiKeychain.IsValid(key) == false {
 			c.JSON(http.StatusUnauthorized, "")
 			return
