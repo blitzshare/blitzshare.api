@@ -55,4 +55,5 @@ drop-db:
 create-apiKey:
 	psql ${DB_CON} -c "INSERT INTO api_keys (api_key, enabled) VALUES ('blitzshare-client-xxxxx', TRUE)"
 setup-infra:  create-db migrate-up create-apiKey
-setup-infra:  create-db migrate-up create-apiKey
+
+.PHONY: test

@@ -46,7 +46,8 @@ jobs:
           name: Run test
           command: make test
       - store_test_results:
-          path: /tmp/test-reports
+          path: coverage.out
+          destination: coverage.out
 
   build_job:
     working_directory: ~/repo
