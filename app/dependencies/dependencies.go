@@ -3,9 +3,9 @@ package dependencies
 import (
 	"blitzshare.api/app/config"
 
-	"blitzshare.api/app/server/services/event"
-	"blitzshare.api/app/server/services/random"
-	"blitzshare.api/app/server/services/registry"
+	"blitzshare.api/app/services/event"
+	"blitzshare.api/app/services/random"
+	"blitzshare.api/app/services/registry"
 )
 
 type Dependencies struct {

@@ -1,7 +1,7 @@
 package main
 
 import (
-	"blitzshare.api/app/server/routes"
+	"blitzshare.api/app/routes"
 	"os"
 	"os/signal"
 	"sync"
@@ -9,7 +9,6 @@ import (
 
 	"blitzshare.api/app/config"
 	"blitzshare.api/app/dependencies"
-	"blitzshare.api/app/server"
 	log "github.com/sirupsen/logrus"
 )
 

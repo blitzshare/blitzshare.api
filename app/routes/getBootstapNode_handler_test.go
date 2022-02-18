@@ -1,7 +1,7 @@
 package routes_test
 
 import (
-	"blitzshare.api/app/server/model"
+	"blitzshare.api/app/model"
 	"encoding/json"
 	"io/ioutil"
 	"net/http/httptest"
@@ -10,7 +10,7 @@ import (
 
 	"blitzshare.api/app/config"
 	"blitzshare.api/app/dependencies"
-	"blitzshare.api/app/server/routes"
+	"blitzshare.api/app/routes"
 	"blitzshare.api/mocks"
 	"blitzshare.api/test"
 	"github.com/gin-gonic/gin"

@@ -42,6 +42,10 @@ $ make k8s-apply
 # destroy k8s resources
 $ make k8s-destroy
 ```
+## Db migrations
+```bash
+$ make migration-create name=api_key_init
+```
 
 ## Tools
 [kubemqctl](https://docs.kubemq.io/getting-started/quick-start)

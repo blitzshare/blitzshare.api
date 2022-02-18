@@ -1,8 +1,8 @@
 package routes_test
 
 import (
-	"blitzshare.api/app/server/model"
-	"blitzshare.api/app/server/routes"
+	"blitzshare.api/app/model"
+	"blitzshare.api/app/routes"
 	"bytes"
 	"encoding/json"
 	"io/ioutil"

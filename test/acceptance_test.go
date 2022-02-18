@@ -1,7 +1,7 @@
 package test
 
 import (
-	"blitzshare.api/app/server/model"
+	"blitzshare.api/app/model"
 	"bytes"
 	"context"
 	"encoding/json"

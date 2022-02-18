@@ -3,7 +3,7 @@ package random_test
 import (
 	"testing"
 
-	"blitzshare.api/app/server/services/random"
+	"blitzshare.api/app/services/random"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 )
