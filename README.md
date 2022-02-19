@@ -3,9 +3,10 @@
 
 ![logo](./assets/logo.png)
 
+[API docs](https://bump.sh/pavel-durov/doc/blitzshareapi)
+
 # blitzshare.api
 Main public api responsible for Blitzshare business logic.
-
 
 ## Getting started
 
@@ -51,8 +52,6 @@ $ make create-db
 # delete database
 $ make drop-db
 # run migrations
-$ make migrate-up
-# crate api key record
 $ make migrate-up
 ```
 

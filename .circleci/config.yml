@@ -40,12 +40,6 @@ jobs:
           version: 19.03.13
           docker_layer_caching: false
       - run:
-          name: install bump-cli
-          command: |
-            sudo apt update
-            sudo apt install nodejs npm
-            sudo npm install -g bump-cli
-      - run:
           name: docker build, tag & push
           command: |
             TAG=latest
@@ -53,6 +47,27 @@ jobs:
             docker build -t  ${PROJ_NAME}:${TAG} .
             docker tag ${PROJ_NAME}:${TAG} iamkimchi/${PROJ_NAME}:${TAG}
             docker push iamkimchi/${PROJ_NAME}:${TAG}
+
+  publish_api_docs:
+    working_directory: ~/repo
+    docker:
+      - image: circleci/golang:1.17.2
+    environment:
+      PROJ_NAME: blitzshare.api
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - go-mod-v4-{{ checksum "go.sum" }}
+      - run:
+          name: install bump-cli
+          command: |
+            sudo apt update
+            sudo apt install nodejs npm
+            sudo npm install -g bump-cli
+      - run:
+          name: install dependencies
+          command: make install
       - run:
           name: api doc gen
           command: make swag-gen
@@ -94,3 +109,12 @@ workflows:
             branches:
               only:
                 - main
+      - publish_api_docs:
+          context: eu-west-1
+          requires:
+            - test_job
+          filters:
+            branches:
+              only:
+                - main
+
