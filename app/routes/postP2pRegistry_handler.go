@@ -14,6 +14,7 @@ import (
 
 // PostP2pRegistry godoc
 // @Summary  Registers peer registry config
+// @Param        X-Api-Key  header  string  true  "API key authenication header"
 // @Schemes
 // @Tags    p2p-registry
 // @Param   config body     model.P2pPeerRegistryReq  true  "p2p registry config"
@@ -23,6 +24,11 @@ import (
 // @Router   /p2p/registry [post]
 func PostP2pRegistryHandler(deps *dependencies.Dependencies) func(c *gin.Context) {
 	return func(c *gin.Context) {
+		AddDefaultResponseHeaders(c)
+		if IsNotAuthorized(c, deps.ApiKeychain) {
+			c.JSON(http.StatusUnauthorized, nil)
+			return
+		}
 		AddDefaultResponseHeaders(c)
 		var req model.P2pPeerRegistryReq
 		token := *deps.Rnd.GenerateRandomWordSequence()

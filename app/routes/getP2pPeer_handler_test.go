@@ -47,13 +47,17 @@ var _ = Describe("GET /p2p/registry/:otp", func() {
 			r := "random-string"
 			rndMock.On("GenerateRandomWordSequence").Return(&r)
 			deps := dependencies.Dependencies{
-				Config:   config,
-				Registry: registry,
-				Rnd:      rndMock,
+				Config:      config,
+				Registry:    registry,
+				Rnd:         rndMock,
+				ApiKeychain: test.MockApiKeychain(true),
 			}
-			routes.GetP2pRegistryHandler(&deps)(c)
-			Expect(rec.Code).To(Equal(http.StatusNotFound))
+			req, _ := http.NewRequest("GET", "/p2p/registry/non-defined-id", nil)
+			req.Header.Add("x-api-key", "test")
+			router := routes.NewRouter(&deps)
+			router.ServeHTTP(rec, req)
 			test.AsserBlitzshareHeaders(rec)
+			Expect(rec.Code).To(Equal(http.StatusNotFound))
 		})
 		It("expected 200 Ok for valid OTP", func() {
 			registry := &mocks.Registry{}
@@ -77,24 +81,19 @@ var _ = Describe("GET /p2p/registry/:otp", func() {
 			r := "random-string"
 			rndMock.On("GenerateRandomWordSequence").Return(&r)
 			deps := dependencies.Dependencies{
-				Config:   config,
-				Registry: registry,
-				Rnd:      rndMock,
+				Config:      config,
+				Registry:    registry,
+				Rnd:         rndMock,
+				ApiKeychain: test.MockApiKeychain(true),
 			}
 
 			rec := httptest.NewRecorder()
-			c, _ := gin.CreateTestContext(rec)
-			c.Params = []gin.Param{
-				{
-					Key:   "otp",
-					Value: OTP,
-				},
-			}
-			routes.GetP2pRegistryHandler(&deps)(c)
-
+			req, _ := http.NewRequest("GET", "/p2p/registry/"+OTP, nil)
+			req.Header.Add("x-api-key", "test")
+			router := routes.NewRouter(&deps)
+			router.ServeHTTP(rec, req)
 			body, _ := ioutil.ReadAll(rec.Body)
 			peerInfo := model.MultiAddrResponse{}
-
 			err = json.Unmarshal(body, &peerInfo)
 			Expect(rec.Code).To(Equal(http.StatusOK))
 			Expect(err).To(BeNil())

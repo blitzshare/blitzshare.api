@@ -3,7 +3,7 @@ package routes_test
 import (
 	"blitzshare.api/app/model"
 	"encoding/json"
-	"github.com/stretchr/testify/mock"
+	"github.com/gin-gonic/gin"
 	"io/ioutil"
 	"net/http/httptest"
 
@@ -14,7 +14,6 @@ import (
 	"blitzshare.api/app/routes"
 	"blitzshare.api/mocks"
 	"blitzshare.api/test"
-	"github.com/gin-gonic/gin"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 )
@@ -27,21 +26,19 @@ var _ = Describe("Get /p2p/bootstrap-node", func() {
 		}
 		It("expected 401 Unauthorized", func() {
 			rec := httptest.NewRecorder()
-			c, _ := gin.CreateTestContext(rec)
+			//c, _ := gin.CreateTestContext(rec)
 			registry := &mocks.Registry{}
 			registry.On("GetNodeConfig").Return("", nil)
-			keychain := &mocks.ApiKeychain{}
-			keychain.On("IsValid", mock.MatchedBy(test.MatchAny)).Return(false)
 			deps := dependencies.Dependencies{
 				Config:      config,
 				Registry:    registry,
-				ApiKeychain: keychain,
+				ApiKeychain: test.MockApiKeychain(false),
 			}
-			c.Request = &http.Request{
-				Header: make(http.Header),
-			}
-			c.Request.Header.Set("x-api-key", "test")
-			routes.GetBootstrapNodeHandler(&deps)(c)
+			router := routes.NewRouter(&deps)
+			req, _ := http.NewRequest("GET", "/p2p/bootstrap-node", nil)
+			req.Header = make(http.Header)
+			req.Header.Add("x-api-key", "test")
+			router.ServeHTTP(rec, req)
 			Expect(rec.Code).To(Equal(http.StatusUnauthorized))
 			test.AsserBlitzshareHeaders(rec)
 		})
@@ -50,16 +47,12 @@ var _ = Describe("Get /p2p/bootstrap-node", func() {
 			c, _ := gin.CreateTestContext(rec)
 			registry := &mocks.Registry{}
 			registry.On("GetNodeConfig").Return("", nil)
-			keychain := &mocks.ApiKeychain{}
-			keychain.On("IsValid", mock.MatchedBy(test.MatchAny)).Return(true)
 			deps := dependencies.Dependencies{
 				Config:      config,
 				Registry:    registry,
-				ApiKeychain: keychain,
+				ApiKeychain: test.MockApiKeychain(true),
 			}
-			c.Request = &http.Request{
-				Header: make(http.Header),
-			}
+			c.Request = &http.Request{Header: make(http.Header)}
 			c.Request.Header.Set("x-api-key", "test")
 			routes.GetBootstrapNodeHandler(&deps)(c)
 			Expect(rec.Code).To(Equal(http.StatusNotFound))
@@ -69,17 +62,13 @@ var _ = Describe("Get /p2p/bootstrap-node", func() {
 			rec := httptest.NewRecorder()
 			c, _ := gin.CreateTestContext(rec)
 			registry := &mocks.Registry{}
-			keychain := &mocks.ApiKeychain{}
-			keychain.On("IsValid", mock.MatchedBy(test.MatchAny)).Return(true)
 			registry.On("GetNodeConfig").Return("not-parsable-id", nil)
 			deps := dependencies.Dependencies{
 				Config:      config,
 				Registry:    registry,
-				ApiKeychain: keychain,
+				ApiKeychain: test.MockApiKeychain(true),
 			}
-			c.Request = &http.Request{
-				Header: make(http.Header),
-			}
+			c.Request = &http.Request{Header: make(http.Header)}
 			c.Request.Header.Set("x-api-key", "test")
 			routes.GetBootstrapNodeHandler(&deps)(c)
 			Expect(rec.Code).To(Equal(http.StatusInternalServerError))
@@ -88,21 +77,16 @@ var _ = Describe("Get /p2p/bootstrap-node", func() {
 		It("expected 200 Ok for valid OTP", func() {
 			registry := &mocks.Registry{}
 			registry.On("GetNodeConfig").Return("{\"nodeId\":\"note-test-id\",\"port\":63785}", nil)
-			keychain := &mocks.ApiKeychain{}
-			keychain.On("IsValid", mock.MatchedBy(test.MatchAny)).Return(true)
 			deps := dependencies.Dependencies{
 				Config:      config,
 				Registry:    registry,
-				ApiKeychain: keychain,
+				ApiKeychain: test.MockApiKeychain(true),
 			}
 			rec := httptest.NewRecorder()
 			c, _ := gin.CreateTestContext(rec)
-			c.Request = &http.Request{
-				Header: make(http.Header),
-			}
+			c.Request = &http.Request{Header: make(http.Header)}
 			c.Request.Header.Set("x-api-key", "test")
 			routes.GetBootstrapNodeHandler(&deps)(c)
-
 			body, _ := ioutil.ReadAll(rec.Body)
 			peerInfo := model.NodeConfigRespone{}
 			err := json.Unmarshal(body, &peerInfo)
@@ -110,6 +94,18 @@ var _ = Describe("Get /p2p/bootstrap-node", func() {
 			Expect(err).To(BeNil())
 			Expect(peerInfo.NodeId).To(Equal("note-test-id"))
 			Expect(peerInfo.Port).To(Equal(63785))
+			test.AsserBlitzshareHeaders(rec)
+		})
+		It("expected 401 Unauthorized", func() {
+			rec := httptest.NewRecorder()
+			deps := dependencies.Dependencies{
+				Config:      config,
+				ApiKeychain: test.MockApiKeychain(false),
+			}
+			router := routes.NewRouter(&deps)
+			req, _ := http.NewRequest("GET", "/p2p/bootstrap-node", nil)
+			router.ServeHTTP(rec, req)
+			Expect(rec.Code).To(Equal(http.StatusUnauthorized))
 			test.AsserBlitzshareHeaders(rec)
 		})
 	})

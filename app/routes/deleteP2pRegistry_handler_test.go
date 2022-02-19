@@ -1,22 +1,21 @@
 package routes_test
 
 import (
+	"blitzshare.api/app/config"
+	"blitzshare.api/app/dependencies"
 	"blitzshare.api/app/model"
 	"blitzshare.api/app/routes"
+	"blitzshare.api/mocks"
+	"blitzshare.api/test"
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io/ioutil"
-	"net/http"
-	"net/http/httptest"
-
-	"blitzshare.api/app/config"
-	"blitzshare.api/app/dependencies"
-	"blitzshare.api/mocks"
-	"blitzshare.api/test"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"github.com/stretchr/testify/mock"
+	"io/ioutil"
+	"net/http"
+	"net/http/httptest"
 )
 
 var _ = Describe("DELETE P2p Registry", func() {
@@ -27,7 +26,6 @@ var _ = Describe("DELETE P2p Registry", func() {
 	)
 	var deps *dependencies.Dependencies
 	BeforeEach(func() {
-
 		settings := config.Settings{RedisUrl: "redis.svc.cluster.local"}
 		emit := &mocks.EventEmit{}
 		ack := AckId
@@ -41,8 +39,9 @@ var _ = Describe("DELETE P2p Registry", func() {
 			Settings: settings,
 		}
 		deps = &dependencies.Dependencies{
-			Config:    config,
-			EventEmit: emit,
+			Config:      config,
+			EventEmit:   emit,
+			ApiKeychain: test.MockApiKeychain(true),
 		}
 	})
 
@@ -52,12 +51,13 @@ var _ = Describe("DELETE P2p Registry", func() {
 			rec := httptest.NewRecorder()
 			url := fmt.Sprintf("/p2p/registry/%s/%s", OTP, DeregisterToken)
 			req, _ := http.NewRequest("DELETE", url, nil)
+			req.Header.Set("x-api-key", "test")
 			router.ServeHTTP(rec, req)
 			var response model.AckResponse
 			body, _ := ioutil.ReadAll(rec.Body)
 			json.Unmarshal(body, &response)
-			Expect(response.AckId).To(Equal(AckId))
 			Expect(rec.Code).To(Equal(http.StatusAccepted))
+			Expect(response.AckId).To(Equal(AckId))
 			test.AsserBlitzshareHeaders(rec)
 		})
 		It("expected 404 for undefined deregistration token", func() {
@@ -92,14 +92,26 @@ var _ = Describe("DELETE P2p Registry", func() {
 				mock.MatchedBy(test.MatchAny),
 			).Return(nil, errors.New("failed to acknowledge event"))
 			deps = &dependencies.Dependencies{
-				Config:    deps.Config,
-				EventEmit: emit,
+				Config:      deps.Config,
+				EventEmit:   emit,
+				ApiKeychain: test.MockApiKeychain(true),
 			}
 			router := routes.NewRouter(deps)
 			rec := httptest.NewRecorder()
 			req, _ := http.NewRequest("DELETE", fmt.Sprintf("/p2p/registry/%s/%s", OTP, DeregisterToken), nil)
 			router.ServeHTTP(rec, req)
 			Expect(rec.Code).To(Equal(http.StatusInternalServerError))
+			test.AsserBlitzshareHeaders(rec)
+		})
+		It("expected 401 Unauthorized", func() {
+			rec := httptest.NewRecorder()
+			deps := dependencies.Dependencies{
+				ApiKeychain: test.MockApiKeychain(false),
+			}
+			router := routes.NewRouter(&deps)
+			req, _ := http.NewRequest("DELETE", fmt.Sprintf("/p2p/registry/%s/%s", OTP, DeregisterToken), nil)
+			router.ServeHTTP(rec, req)
+			Expect(rec.Code).To(Equal(http.StatusUnauthorized))
 			test.AsserBlitzshareHeaders(rec)
 		})
 	})
