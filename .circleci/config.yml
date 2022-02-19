@@ -46,7 +46,8 @@ jobs:
           name: Run test
           command: make test
       - store_test_results:
-          path: /tmp/test-reports
+          path: coverage.out
+          destination: coverage.out
 
   build_job:
     working_directory: ~/repo
@@ -94,10 +95,6 @@ workflows:
     jobs:
       - test_job:
           context: eu-west-1
-          # filters:
-          #   branches:
-          #     ignore:
-          #       - main
 
       - build_job:
           context: eu-west-1
@@ -107,11 +104,3 @@ workflows:
             branches:
               only:
                 - main
-      # - deploy_job:
-      #     context: eu-west-1
-      #     requires:
-      #       - build_job
-      #     filters:
-      #       branches:
-      #         only:
-      #           - main

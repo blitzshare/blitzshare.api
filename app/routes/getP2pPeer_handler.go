@@ -1,7 +1,7 @@
 package routes
 
 import (
-	"blitzshare.api/app/server/model"
+	"blitzshare.api/app/model"
 	"encoding/json"
 	"net/http"
 
@@ -22,6 +22,7 @@ func parsePeerConfig(config string) (*model.P2pPeerRegistryResponse, error) {
 
 // GetP2pRegistry godoc
 // @Summary  Returns peer registry config via OTP
+// @Param        X-Api-Key  header  string  true  "API key authenication header"
 // @Schemes
 // @Tags    p2p-registry
 // @Param    otp    query     string  false  "blitzshare generated otp"
@@ -32,6 +33,10 @@ func parsePeerConfig(config string) (*model.P2pPeerRegistryResponse, error) {
 func GetP2pRegistryHandler(deps *dependencies.Dependencies) func(c *gin.Context) {
 	return func(c *gin.Context) {
 		AddDefaultResponseHeaders(c)
+		if IsNotAuthorized(c, deps.ApiKeychain) {
+			c.JSON(http.StatusUnauthorized, nil)
+			return
+		}
 		otp := c.Params.ByName("otp")
 		log.Debugln("GetP2pPeerHandler", otp)
 		str, err := deps.Registry.GetOtp(otp)

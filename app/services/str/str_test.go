@@ -3,7 +3,7 @@ package str_test
 import (
 	"testing"
 
-	"blitzshare.api/app/server/services/str"
+	"blitzshare.api/app/services/str"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 )

@@ -1,8 +1,8 @@
 package routes_test
 
 import (
-	"blitzshare.api/app/server/model"
-	"blitzshare.api/app/server/routes"
+	"blitzshare.api/app/model"
+	"blitzshare.api/app/routes"
 	"bytes"
 	"encoding/json"
 	"io/ioutil"
@@ -43,9 +43,10 @@ var _ = Describe("POST /p2p/registry", func() {
 		r := "random-string"
 		rndMock.On("GenerateRandomWordSequence").Return(&r)
 		deps = &dependencies.Dependencies{
-			Config:    config,
-			EventEmit: emit,
-			Rnd:       rndMock,
+			Config:      config,
+			EventEmit:   emit,
+			Rnd:         rndMock,
+			ApiKeychain: test.MockApiKeychain(true),
 		}
 	})
 	Context("PostP2pRegistryHandler", func() {

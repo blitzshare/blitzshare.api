@@ -1,7 +1,7 @@
 package routes
 
 import (
-	"blitzshare.api/app/server/model"
+	"blitzshare.api/app/model"
 	"encoding/json"
 	"net/http"
 
@@ -21,6 +21,7 @@ func parseNodeConfig(config string) (*model.NodeConfig, error) {
 
 // BootstrapNode godoc
 // @Summary  Returns bootstrap node configuration for for libp2p p2p connection
+// @Param        X-Api-Key  header  string  true  "API key authenication header"
 // @Schemes
 // @Tags    bootstrap-node
 // @Produce json
@@ -30,7 +31,10 @@ func parseNodeConfig(config string) (*model.NodeConfig, error) {
 func GetBootstrapNodeHandler(deps *dependencies.Dependencies) func(c *gin.Context) {
 	return func(c *gin.Context) {
 		AddDefaultResponseHeaders(c)
-		log.Debugln("GetP2pBootstrapNode")
+		if IsNotAuthorized(c, deps.ApiKeychain) {
+			c.JSON(http.StatusUnauthorized, "")
+			return
+		}
 		config, err := deps.Registry.GetNodeConfig()
 		if err != nil || config == "" {
 			c.JSON(http.StatusNotFound, "")

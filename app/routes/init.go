@@ -15,6 +15,9 @@ func registerDefaultRoute(router *gin.Engine) {
 		c.JSON(http.StatusNotFound, gin.H{"code": "PAGE_NOT_FOUND", "message": "Page not found :("})
 	})
 }
+
+// @title Blitzshare API
+// @version 1.0
 func NewRouter(deps *dependencies.Dependencies) *gin.Engine {
 	router := gin.New()
 	if deps.Config.Settings.Environment != "local" {

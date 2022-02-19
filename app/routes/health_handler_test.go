@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 
-	"blitzshare.api/app/server/routes"
+	"blitzshare.api/app/routes"
 	"blitzshare.api/test"
 	"github.com/gin-gonic/gin"
 	. "github.com/onsi/ginkgo"

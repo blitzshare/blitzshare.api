@@ -1,21 +1,13 @@
 package event
 
 import (
-	"blitzshare.api/app/server/model"
+	"blitzshare.api/app/model"
 	"context"
 	"encoding/json"
 
 	"github.com/kubemq-io/kubemq-go"
 	log "github.com/sirupsen/logrus"
 )
-
-type NodeJoinedEvent struct {
-	NodeId string `json:"nodeId"`
-}
-
-func NewNodeJoinedEvent(nodeId string) *NodeJoinedEvent {
-	return &NodeJoinedEvent{NodeId: nodeId}
-}
 
 const (
 	PeerRegisterCmd   = "p2p-peer-register-cmd"
@@ -32,7 +24,7 @@ type EventEmit interface {
 type EventEmitImpl struct {
 }
 
-func NewEventEmit() EventEmit {
+func New() EventEmit {
 	return &EventEmitImpl{}
 }
 
