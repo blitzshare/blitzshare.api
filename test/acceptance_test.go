@@ -19,7 +19,10 @@ import (
 const (
 	MultiAddr = "/ip4/10.101.18.26/tcp/63785/p2p/12D3KooWPGR"
 	Otp       = "test-reimpose-verminosis-acidulate"
+	ApiKey    = "blitzshare-client-XCVsdfsdfSDFxcvWErsd3"
 )
+
+var client = &http.Client{}
 
 var baseUrl string
 
@@ -49,7 +52,11 @@ func postPeerRegistry(ctx context.Context) context.Context {
 		Mode: "chat",
 	})
 	serverUrl := fmt.Sprintf("%s/p2p/registry", baseUrl)
-	resp, _ := http.Post(serverUrl, "application/json", bytes.NewReader(body))
+
+	req, _ := http.NewRequest("POST", serverUrl, bytes.NewReader(body))
+	req.Header.Set("x-api-key", ApiKey)
+	resp, _ := client.Do(req)
+
 	ack := model.PeerRegistryAckResponse{}
 	b, _ := ioutil.ReadAll(resp.Body)
 	json.Unmarshal(b, &ack)
@@ -58,7 +65,9 @@ func postPeerRegistry(ctx context.Context) context.Context {
 
 func getPeerInfoViaOTP(ctx context.Context) context.Context {
 	serverUrl := fmt.Sprintf("%s/p2p/registry/%s", baseUrl, Otp)
-	resp, _ := http.Get(serverUrl)
+	req, _ := http.NewRequest("GET", serverUrl, nil)
+	req.Header.Set("x-api-key", ApiKey)
+	resp, _ := client.Do(req)
 	otpRegistry := model.P2pPeerRegistryResponse{}
 	b, _ := ioutil.ReadAll(resp.Body)
 	json.Unmarshal(b, &otpRegistry)
@@ -66,7 +75,9 @@ func getPeerInfoViaOTP(ctx context.Context) context.Context {
 }
 func getBootstrapNodeConfig(ctx context.Context) context.Context {
 	serverUrl := fmt.Sprintf("%s/p2p/bootstrap-node", baseUrl)
-	resp, _ := http.Get(serverUrl)
+	req, _ := http.NewRequest("GET", serverUrl, nil)
+	req.Header.Set("x-api-key", ApiKey)
+	resp, _ := client.Do(req)
 	nodeConfig := model.NodeConfigRespone{}
 	b, _ := ioutil.ReadAll(resp.Body)
 	json.Unmarshal(b, &nodeConfig)
@@ -79,7 +90,7 @@ func validateTestContext(ctx context.Context) error {
 		return errors.New("invalid node config")
 	}
 	otpRegistry := ctx.Value(model.P2pPeerRegistryResponse{}).(model.P2pPeerRegistryResponse)
-	// fmt.Println("otpRegistry", otpRegistry)
+	//fmt.Println("otpRegistry", otpRegistry)
 	if otpRegistry.MultiAddr.MultiAddr == "" || otpRegistry.Mode.Mode == "" || otpRegistry.Otp.Otp == "" {
 		return errors.New("invalid otpRegistry")
 	}
@@ -96,6 +107,7 @@ func deleteUserRegistration(ctx context.Context) error {
 	url := fmt.Sprintf("%s/p2p/registry/%s/%s", baseUrl, Otp, registry.Token)
 	client := &http.Client{}
 	req, _ := http.NewRequest("DELETE", url, nil)
+	req.Header.Set("x-api-key", ApiKey)
 	response, err := client.Do(req)
 	if err != nil {
 		log.Fatalln(err.Error())
