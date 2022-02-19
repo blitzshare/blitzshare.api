@@ -95,10 +95,6 @@ workflows:
     jobs:
       - test_job:
           context: eu-west-1
-          # filters:
-          #   branches:
-          #     ignore:
-          #       - main
 
       - build_job:
           context: eu-west-1
@@ -108,12 +104,3 @@ workflows:
             branches:
               only:
                 - main
-                - chore/api-key-auth
-      # - deploy_job:
-      #     context: eu-west-1
-      #     requires:
-      #       - build_job
-      #     filters:
-      #       branches:
-      #         only:
-      #           - main
