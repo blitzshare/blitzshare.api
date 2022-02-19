@@ -30,6 +30,12 @@ jobs:
           keys:
             - go-mod-v4-{{ checksum "go.sum" }}
       - run:
+          name: Install bump-cli
+          command: |
+            sudo apt update
+            sudo apt install nodejs npm
+            sudo npm install -g bump-cli
+      - run:
           name: Install Dependencies
           command: make install
       - save_cache:
@@ -43,12 +49,11 @@ jobs:
           path: ./docs/swagger.yaml
           destination: swagger.yaml
       - run:
+          name: upload bump docs
+          command: sudo npm exec -- bump deploy ./docs/swagger.yaml -t $BUMP_TOKEN -d blitzshareapi
+      - run:
           name: Run test
           command: make test
-      - store_test_results:
-          path: coverage.out
-          destination: coverage.out
-
   build_job:
     working_directory: ~/repo
     docker:
@@ -95,7 +100,6 @@ workflows:
     jobs:
       - test_job:
           context: eu-west-1
-
       - build_job:
           context: eu-west-1
           requires:
