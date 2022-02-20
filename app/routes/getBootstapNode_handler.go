@@ -37,6 +37,7 @@ func GetBootstrapNodeHandler(deps *dependencies.Dependencies) func(c *gin.Contex
 		}
 		config, err := deps.Registry.GetNodeConfig()
 		if err != nil || config == "" {
+			log.Errorln("cannot obtain node config", config, err)
 			c.JSON(http.StatusNotFound, "")
 			return
 		} else {

@@ -2,10 +2,10 @@ package registry
 
 import (
 	"github.com/go-redis/redis"
-	log "github.com/sirupsen/logrus"
 )
 
-var client *redis.Client
+var p2pPeersDbClient *redis.Client
+var p2pBootstraoNodeDbClient *redis.Client
 
 const (
 	P2pPeersDb         = 0
@@ -26,25 +26,33 @@ func New(redisUrl string) Registry {
 	return &RegistryIml{redisUrl: redisUrl}
 }
 
-func (impl *RegistryIml) getClient(db int) *redis.Client {
-	if client == nil {
-		client = redis.NewClient(&redis.Options{
-			Addr:     impl.redisUrl,
+func (r *RegistryIml) getPeersClient() *redis.Client {
+	if p2pPeersDbClient == nil {
+		p2pPeersDbClient = redis.NewClient(&redis.Options{
+			Addr:     r.redisUrl,
 			Password: "",
-			DB:       db,
+			DB:       P2pPeersDb,
 		})
-		pong, _ := client.Ping().Result()
-		log.Infoln("getClient pong", pong)
 	}
-	return client
+	return p2pPeersDbClient
+}
+func (r *RegistryIml) getBootstrapNodeDbClient() *redis.Client {
+	if p2pBootstraoNodeDbClient == nil {
+		p2pBootstraoNodeDbClient = redis.NewClient(&redis.Options{
+			Addr:     r.redisUrl,
+			Password: "",
+			DB:       P2pBootstrapNodeDb,
+		})
+	}
+	return p2pBootstraoNodeDbClient
 }
 
 func (impl *RegistryIml) GetOtp(otp string) (string, error) {
-	client := impl.getClient(P2pPeersDb)
+	client := impl.getPeersClient()
 	return client.Get(otp).Result()
 }
 
 func (impl *RegistryIml) GetNodeConfig() (string, error) {
-	client := impl.getClient(P2pBootstrapNodeDb)
+	client := impl.getBootstrapNodeDbClient()
 	return client.Get(BootstrapNode).Result()
 }
