@@ -10,8 +10,9 @@ SERVER_CON="postgresql://postgres:postgres@0.0.0.0:5432?sslmode=disable"
 
 
 install:
+	go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@latest
+	go install github.com/kyleconroy/sqlc/cmd/sqlc@latest
 	go install $(shell go list -f '{{join .Imports " "}}' tools.go)
-	go install -tags=postgres github.com/golang-migrate/migrate/v4/cmd/migrate
 	go mod vendor
 start:
 	go run cmd/main.go

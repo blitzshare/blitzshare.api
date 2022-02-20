@@ -889,6 +889,8 @@ github.com/kubemq-io/kubemq-go v1.7.2 h1:BvG91h2He+t5nr1i9xfvGHL0XLw9cp96r6e6U7W
 github.com/kubemq-io/kubemq-go v1.7.2/go.mod h1:WP2VL6bibnCzTmlTKFtb5RWFvB/V9WPl/0psamE/2kI=
 github.com/kubemq-io/protobuf v1.3.1 h1:b4QcnpujV8U3go8pa2+FTESl6ygU6hY8APYibRtyemo=
 github.com/kubemq-io/protobuf v1.3.1/go.mod h1:mzbGBI05R+GhFLD520xweEIvDM+m4nI7ruJDhgEncas=
+github.com/kyleconroy/sqlc v1.11.0 h1:TDWfdTdvedxv19QYZrXCpTKpPdy1xNCvdb4eGsj4AK0=
+github.com/kyleconroy/sqlc v1.11.0/go.mod h1:6BhiM0OXVorC3III6dwsRyQywZ6Eb5RP0IZLpxOL2rQ=
 github.com/kyleconroy/sqlc v1.12.0 h1:bcccRetk90PiAVO6+LPSi+DkVyEa55IiKOR9Nibeghc=
 github.com/kyleconroy/sqlc v1.12.0/go.mod h1:3svIgoCqDgbZLV+/hzQVOc/ZQJGeJnPiINPkPqqUlZg=
 github.com/leodido/go-urn v1.2.0 h1:hpXL4XnriNwQ/ABnpepYM/1vCLWNDfUNts8dX3xTG6Y=
