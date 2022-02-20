@@ -10,7 +10,7 @@ import (
 )
 
 // DeleteP2pPeerRegistry godoc
-// @Summary  Returns peer registry config via OTP
+// @Summary  Submits event of peer de-registry deregistration token
 // @Param        X-Api-Key  header  string  true  "API key authenication header"
 // @Schemes
 // @Tags    p2p-registry

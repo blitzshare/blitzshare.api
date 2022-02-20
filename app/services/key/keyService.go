@@ -31,7 +31,7 @@ func (iml *ApiKeyIml) IsValid(apiKey *string) bool {
 	q := db.New(con)
 	dbApiKey, err := q.GetApiKey(ctx, *apiKey)
 	if err != nil {
-		log.Fatalln("failed get key", *apiKey)
+		log.Errorln("failed get key", *apiKey)
 	}
 	return dbApiKey.Enabled
 }
