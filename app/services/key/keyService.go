@@ -14,24 +14,32 @@ type ApiKeychain interface {
 
 type ApiKeyIml struct {
 	DbConnection string
+	Keys         map[string]int
 }
 
 func New(config config.Config) ApiKeychain {
 	return &ApiKeyIml{
 		DbConnection: config.Settings.KeyStoreDbConnection,
+		Keys:         make(map[string]int),
 	}
 }
 
 func (iml *ApiKeyIml) IsValid(apiKey *string) bool {
 	ctx := context.Background()
+	_, exist := iml.Keys[*apiKey]
+	if exist {
+		return exist
+	}
+	log.Debugln("cache miss - fetching from db")
 	con, err := sql.Open("postgres", iml.DbConnection)
 	if err != nil || con.Ping() != nil {
 		log.Fatalln("failed connecting to db")
 	}
 	q := db.New(con)
-	dbApiKey, err := q.GetApiKey(ctx, *apiKey)
+	dbRecord, err := q.GetApiKey(ctx, *apiKey)
 	if err != nil {
 		log.Errorln("failed get key", *apiKey)
 	}
-	return dbApiKey.Enabled
+	iml.Keys[dbRecord.ApiKey] = 0
+	return dbRecord.Enabled
 }
