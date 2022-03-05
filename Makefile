@@ -5,8 +5,9 @@ export GO111MODULE := on
 export GOBIN := $(CWD)/.bin
 
 DB_NAME="id"
-DB_CON="postgresql://postgres:postgres@0.0.0.0:5432/${DB_NAME}?sslmode=disable"
-SERVER_CON="postgresql://postgres:postgres@0.0.0.0:5432?sslmode=disable"
+ADDRESS="adb6c868ac703490198e390a6a3ad6f4-171706809.eu-west-2.elb.amazonaws.com"
+DB_CON="postgresql://postgres:postgres@${ADDRESS}:5432/${DB_NAME}?sslmode=disable"
+SERVER_CON="postgresql://postgres:postgres@${ADDRESS}:5432?sslmode=disable"
 
 
 install:
