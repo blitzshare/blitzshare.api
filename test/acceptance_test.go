@@ -27,6 +27,7 @@ var client = &http.Client{}
 var baseUrl string
 
 type healthCheckStatusCodeKey struct{}
+type postPeerRegistryStatusCode struct{}
 
 func getHealthCheck(ctx context.Context) context.Context {
 	url := fmt.Sprintf("%s/test", os.Getenv("API_URL"))
@@ -41,7 +42,16 @@ func assertHealthCheckResponseStatusIsOk(ctx context.Context) error {
 	}
 	return errors.New("status code is not OK")
 }
-func postPeerRegistry(ctx context.Context) context.Context {
+
+func assertStatusCodeIsUnauthorized(ctx context.Context) error {
+	statusCode := ctx.Value(postPeerRegistryStatusCode{}).(int)
+	if statusCode == http.StatusUnauthorized {
+		return nil
+	}
+	return errors.New("status code is not OK")
+}
+
+func postPeerRegistry(ctx context.Context, authKey bool) context.Context {
 	body, _ := json.Marshal(model.P2pPeerRegistryReq{
 		MultiAddr: model.MultiAddr{
 			MultiAddr: MultiAddr,
@@ -54,13 +64,19 @@ func postPeerRegistry(ctx context.Context) context.Context {
 	serverUrl := fmt.Sprintf("%s/p2p/registry", baseUrl)
 
 	req, _ := http.NewRequest("POST", serverUrl, bytes.NewReader(body))
-	req.Header.Set("x-api-key", ApiKey)
+	if authKey {
+		req.Header.Set("x-api-key", ApiKey)
+	}
+
 	resp, _ := client.Do(req)
 
 	ack := model.PeerRegistryAckResponse{}
 	b, _ := ioutil.ReadAll(resp.Body)
 	json.Unmarshal(b, &ack)
-	return context.WithValue(ctx, model.PeerRegistryAckResponse{}, ack)
+
+	return context.WithValue(
+		context.WithValue(ctx, postPeerRegistryStatusCode{}, resp.StatusCode),
+		model.PeerRegistryAckResponse{}, ack)
 }
 
 func getPeerInfoViaOTP(ctx context.Context) context.Context {
@@ -122,9 +138,15 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 	baseUrl = os.Getenv("API_URL")
 	ctx.Step(`^http GET health check request executed$`, getHealthCheck)
 	ctx.Step(`^http response is OK$`, assertHealthCheckResponseStatusIsOk)
-	ctx.Step(`^User registers via OTP$`, postPeerRegistry)
+	ctx.Step(`^User registers via OTP$`, func(ctx context.Context) context.Context {
+		return postPeerRegistry(ctx, true)
+	})
 	ctx.Step(`^Another User obtains registred user information via OTP$`, getPeerInfoViaOTP)
 	ctx.Step(`^User get bootstrap node config$`, getBootstrapNodeConfig)
 	ctx.Step(`^Connection between users can be etablished$`, validateTestContext)
 	ctx.Step(`^User can deregister OTP via obtained Token$`, deleteUserRegistration)
+	ctx.Step(`^User registers via OTP without auth header$`, func(ctx context.Context) context.Context {
+		return postPeerRegistry(ctx, false)
+	})
+	ctx.Step(`^User request is unauthorized`, assertStatusCodeIsUnauthorized)
 }

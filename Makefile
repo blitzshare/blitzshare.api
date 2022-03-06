@@ -22,7 +22,7 @@ test:
 coverage-report-html:
 	go tool cover -html=coverage.out		
 acceptance-tests:
-	cd "$(CWD)/test" && API_URL='http://0.0.0.0/api' ../.bin/godog ./**/*.feature
+	cd "$(CWD)/test" && API_URL='http://api.blitzshare.me/api' ../.bin/godog ./**/*.feature
 fix-format:
 	gofmt -w -s app/  cmd/ mocks/ 
 	goimports -w app/ cmd/ mocks/
