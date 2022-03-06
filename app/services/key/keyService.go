@@ -26,6 +26,9 @@ func New(config config.Config) ApiKeychain {
 
 func (iml *ApiKeyIml) IsValid(apiKey *string) bool {
 	ctx := context.Background()
+	if *apiKey == "" {
+		return false
+	}
 	_, exist := iml.Keys[*apiKey]
 	if exist {
 		return exist

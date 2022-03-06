@@ -5,7 +5,7 @@ export GO111MODULE := on
 export GOBIN := $(CWD)/.bin
 
 DB_NAME="id"
-ADDRESS="adb6c868ac703490198e390a6a3ad6f4-171706809.eu-west-2.elb.amazonaws.com"
+ADDRESS="0.0.0.0"
 DB_CON="postgresql://postgres:postgres@${ADDRESS}:5432/${DB_NAME}?sslmode=disable"
 SERVER_CON="postgresql://postgres:postgres@${ADDRESS}:5432?sslmode=disable"
 
