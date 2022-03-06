@@ -7,19 +7,20 @@ import (
 
 const (
 	ServiceHeader = "X-Blitzshare-Service"
+	KeyHeader     = "X-Api-Key"
+	ServiceName   = "blitzshare.api"
 )
 
 func AddDefaultResponseHeaders(c *gin.Context) {
-	c.Header(ServiceHeader, "blitzshare.api")
+	c.Header(ServiceHeader, ServiceName)
 }
 
 func GetApiKeyHeader(c *gin.Context) *string {
-	apiKeyHeader := c.Request.Header.Get("X-Api-Key")
+	apiKeyHeader := c.Request.Header.Get(KeyHeader)
 	return &apiKeyHeader
 }
 
 func IsNotAuthorized(c *gin.Context, chain key.ApiKeychain) bool {
 	key := GetApiKeyHeader(c)
 	return chain.IsValid(key) == false
-
 }

@@ -51,7 +51,7 @@ var _ = Describe("DELETE P2p Registry", func() {
 			rec := httptest.NewRecorder()
 			url := fmt.Sprintf("/p2p/registry/%s/%s", OTP, DeregisterToken)
 			req, _ := http.NewRequest("DELETE", url, nil)
-			req.Header.Set("x-api-key", "test")
+			req.Header.Set("X-Api-Key", "test")
 			router.ServeHTTP(rec, req)
 			var response model.AckResponse
 			body, _ := ioutil.ReadAll(rec.Body)
