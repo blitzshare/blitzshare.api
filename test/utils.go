@@ -13,7 +13,7 @@ func MatchAny(input interface{}) bool {
 }
 
 func AsserBlitzshareHeaders(rec *httptest.ResponseRecorder) {
-	Expect(rec.Header().Get("X-Blitzshare-Service")).To(Equal("blitzshare.api"))
+	Expect(rec.Header().Get("X-Blitzshare-Service")).To(Equal("blitzshare.api.v1"))
 }
 
 func MockApiKeychain(isValid bool) *mocks.ApiKeychain {

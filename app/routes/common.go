@@ -8,7 +8,7 @@ import (
 const (
 	ServiceHeader = "X-Blitzshare-Service"
 	KeyHeader     = "X-Api-Key"
-	ServiceName   = "blitzshare.api"
+	ServiceName   = "blitzshare.api.v1"
 )
 
 func AddDefaultResponseHeaders(c *gin.Context) {
