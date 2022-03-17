@@ -88,13 +88,12 @@ jobs:
       - aws-cli/setup
       - run:
           name: configure cluster context
-          command: aws eks --region eu-west-1 update-kubeconfig --name blitzshare-cluster 
+          command: aws eks --region eu-west-2 update-kubeconfig --name eu-west-2-blitzshare-cluster
       - run:
           name: k8s deploy
           command: |
-            pushd k8s
-            bash apply.sh
-            popd
+            make k8s-apply
+            kubectl rollout status deployment/blitzshare-api-dpl -n blitzshare-ns --timeout=120s
 
 workflows:
   test-deploy-wf:
@@ -109,10 +108,14 @@ workflows:
             branches:
               only:
                 - main
+      - deploy_job:
+          context: eu-west-1
+          requires:
+            - build_job
       - publish_api_docs:
           context: eu-west-1
           requires:
-            - test_job
+            - deploy_job
           filters:
             branches:
               only:
