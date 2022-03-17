@@ -34,8 +34,6 @@ jobs:
       PROJ_NAME: blitzshare.api
     steps:
       - checkout
-      - kubernetes/install-kubectl
-      - aws-cli/setup
       - setup_remote_docker:
           version: 19.03.13
           docker_layer_caching: false
@@ -88,12 +86,13 @@ jobs:
       - aws-cli/setup
       - run:
           name: configure cluster context
-          command: aws eks --region eu-west-2 update-kubeconfig --name eu-west-2-blitzshare-cluster
+          command: aws eks --region eu-west-1 update-kubeconfig --name blitzshare-cluster 
       - run:
           name: k8s deploy
           command: |
-            make k8s-apply
-            kubectl rollout status deployment/blitzshare-api-dpl -n blitzshare-ns --timeout=120s
+            pushd k8s
+            bash apply.sh
+            popd
 
 workflows:
   test-deploy-wf:
@@ -108,14 +107,10 @@ workflows:
             branches:
               only:
                 - main
-      - deploy_job:
-          context: eu-west-1
-          requires:
-            - build_job
       - publish_api_docs:
           context: eu-west-1
           requires:
-            - deploy_job
+            - test_job
           filters:
             branches:
               only:
