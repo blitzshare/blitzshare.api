@@ -93,6 +93,19 @@ jobs:
             make k8s-apply
             kubectl rollout status deployment/blitzshare-api-dpl -n blitzshare-ns --timeout=120s
 
+  acceptance_tests_job:
+    working_directory: ~/repo
+    docker:
+      - image: circleci/golang:1.17.2
+    steps:
+      - checkout
+      - run:
+          name: install dependencies
+          command: make install
+      - run:
+          name: acceptance tests
+          command: make acceptance-tests
+
 workflows:
   test-deploy-wf:
     jobs:
@@ -110,6 +123,10 @@ workflows:
           context: eu-west-1
           requires:
             - build_job
+      - acceptance_tests_job:
+          context: eu-west-1
+          requires:
+            - deploy_job
       - publish_api_docs:
           context: eu-west-1
           requires:
